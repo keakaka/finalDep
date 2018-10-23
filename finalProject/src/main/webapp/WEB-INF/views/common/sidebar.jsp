@@ -4,7 +4,7 @@
       <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
       
       <div class="navbar nav_title" style="border: 0;" >
-         <a href="#" class="site_title"><img src="${contextPath }/resources/images/DBDBDEP.png" width="200px" height="50px"></a>
+         <a href="mainPage.mn?m=${sessionScope.loginUser.empNo}" class="site_title"><img src="${contextPath }/resources/images/DBDBDEP.png" width="200px" height="50px"></a>
       </div>
       <div class="clearfix"></div>
       
@@ -26,7 +26,7 @@
       <!-- sidebar menu -->
       <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
          <div class="menu_section">
-            <h3>${loginUser.jobName }</h3>
+            <h3>${loginUser.depName }</h3>
             <ul class="nav side-menu">
                <li>
                   <a><i class="fa fa-user"></i> 마이페이지 <span
@@ -43,6 +43,16 @@
                      <script type="text/javascript">
                      
                      </script>
+                  </ul>
+               </li>
+               <li>
+                  <a><i class="fa fa-envelope"></i> 전자메일 <span
+                     class="fa fa-chevron-down"></span></a>
+                  <ul class="nav child_menu" style="display: none">
+                  <li><a href="${ contextPath }/facinglist.ms?loginUser=${sessionScope.loginUser.empNo}" >보낸메일함</a>
+                  <li><a href="${ contextPath }/facingReceiveList.ms?loginUser=${sessionScope.loginUser.empNo}" >받은메일함</a>
+                  <li><a href="${ contextPath }/facinginsertSelect.ms?loginUser=${sessionScope.loginUser.empNo}" >쪽지작성</a>
+                     
                   </ul>
                </li>
                
@@ -66,6 +76,9 @@
                      <li><a href="selectProceeding.rtc?empNo=${loginUser.empNo }">회의록 보기</a></li>
                   </ul>
                </li>
+               <li><a href="boardList.bo?depName=${sessionScope.loginUser.depName}"><i class="fa fa-clipboard"></i> 부서게시판 </a></li>
+               <li><a href="${ contextPath }/depESelect.de?loginUser=${sessionScope.loginUser.empNo}"><i class="fa fa-clipboard"></i>비상연락망</a></li>
+               <!-- <li><a href="calendar.ca"><i class="fa fa-calendar"></i> 일정 관리 </a></li> -->
                <li>
                   <a><i class="fa fa-calendar"></i> 일정
                      <span class="fa fa-chevron-down"></span>
@@ -75,30 +88,30 @@
                      <li><a href="calendarDep.ca">부서 일정</a></li>
                   </ul>
                </li>
-               <li><a href="boardList.bo?depName=${sessionScope.loginUser.depName}"><i class="fa fa-clipboard"></i> 부서게시판 </a></li>
-               
-               <li><a href="${ contextPath }/depESelect.de?loginUser=${sessionScope.loginUser.empNo}"><i class="fa fa-clipboard"></i> 비상연락망</a></li>
-               <!-- <li><a href="calendar.ca"><i class="fa fa-calendar"></i> 일정 관리 </a></li> -->
-               
                <li><a href="addressBook.ad"><i class="fa fa-star"></i> 주소록 </a></li>
 				
+			  <c:if test="${sessionScope.loginUser.depId eq 'D4' }">
                <li><a href="salary.me"><i class="fa fa-won"></i> 회계관리 </a></li>
+              </c:if>
 
+              <c:if test="${sessionScope.loginUser.depId eq 'D2' }">
                <li>
                <a><i class="fa fa-users"></i> 인사관리 <span
                      class="fa fa-chevron-down"></span></a>
                   <ul class="nav child_menu" style="display: none">
                      <li><a href="moveMemberInsert.me">사원 추가</a></li>
                      <li><a href="depMgt.pm">부서근태현황</a></li>                                                  
-                     <li><a href="promotion.pm">문서승인</a></li>
+                     <li><a href="promotion.pm">사원관리</a></li>
                      <li><a href="depVacation.pm">부서별 휴가자 조회</a></li>
                      <li><a href="depPromotion.pm">부서별 진급자 조회</a></li>
                      <li><a href="depleave.pm">부서별 퇴사자 조회</a></li>
                      <li><a href="depmoveDeptRecord.pm">부서이동이력 조회</a></li>
                   </ul>             
                </li>
+               <li><a><i class="fa fa-barcode"></i> 출근관리 </a></li>
 
-              
+               </c:if>
+               <li><a href="logout.me"><i class="fa fa-user"></i> LogOut </a></li>
             </ul>
 
          </div>
@@ -117,16 +130,25 @@
             
 
             <ul class="nav navbar-nav navbar-right">
-            <li><a href="logout.me""><i class="fa fa-power-off"></i> LogOut </a></li>
               <li role="presentation" class="dropdown">
                 <a onclick="return test(${loginUser.empNo });" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
                   <i class="fa fa-envelope-o" style="font-size:25px;"></i>
                   <span class="badge bg-green">${loginUser.myAlarmCount }</span>
                 </a>
                 <ul id="menu1" class="dropdown-menu list-unstyled msg_list animated fadeInDown" role="menu">
+                  
+                  <!-- <li>
+                    <div class="text-center">
+                      <a>
+                        <strong data-toggle="modal" data-target="#myModal">See All Alerts</strong>
+                       <i  class="fa fa-angle-right"></i>
+                      </a>
+                    </div>
+                  </li> -->
+                  
                 </ul>
+                
               </li>
-               
 
             </ul>
           </nav>
@@ -135,50 +157,6 @@
       </div>
       
       <script>
-      $(function(){
-    	var empNo = empNo;
-  		console.log(empNo);
-  		
-  		$.ajax({
-  			type : "post",
-  			url : "alarm.me",
-  			data : {empNo:empNo},
-  			dataType : "json",
-  			success : function(data) {
-  				console.log(data);
-  				console.log(typeof data);
-  				
-  				$("#menu1").html('');
-  				
-  				var list = data;
-  				
-  				var str = '';
-  				$.each(list, function(i){
-  					
-  					str += '<li style=""><a href="deleteAlarm.me?alarmNo=' + list[i].alarmNo+'" style="font-size:15px;"><b style="font-size:12px;">발신자 : ' + list[i].empName + '</b><br>' + list[i].alarmContents + '</a>';
-  					str += '</li>';
-  				});
-  				
-  				str += '<li><div class="text-center"><a href="${ contextPath }/facingReceiveList.ms?loginUser=${loginUser.empNo }"><strong data-toggle="modal" data-target="">쪽지함 보기</strong><i class="fa fa-angle-right"></i></a></div></li>';
-  				
-  				$("#menu1").append(str);
-  				/* $("#alarmMessage").html('');
-  				
-  				var list = data;
-  				$.each(data, function(index, item){
-  					console.log(item.alarmContents);
-  					$("#alarmMessage").text(item.alarmContents);
-  				}); */
-  				
-  			},
-  			error : function(data) {
-  				console.log(data);
-  			}
-  		});
-      });
-    		
-    	
-      
       	function test(empNo){
       		var empNo = empNo;
       		console.log(empNo);
@@ -214,7 +192,7 @@
       					$("#alarmMessage").text(item.alarmContents);
       				}); */
       				
-      			/* },
+      			},
       			error : function(data) {
       				console.log(data);
       			}

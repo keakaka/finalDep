@@ -307,6 +307,7 @@
                                           </div>
                                           <div class="modal-body">
 
+
                      <!-- start form for validation -->
                   <form id="demo-form" data-parsley-validate action="facingInsert2.ms?loginUser=${sessionScope.loginUser.empNo}" method="post" enctype="multipart/form-data" autocomplete="off">
                   

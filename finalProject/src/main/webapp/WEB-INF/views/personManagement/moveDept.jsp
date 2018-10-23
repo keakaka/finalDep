@@ -69,7 +69,7 @@
 
 							<div class="row x_title">
 								<div class="col-md-6">
-									<h3>결재 승인</h3>
+									<h3>사원 관리</h3>
 								</div>
 								<div class="col-md-6">
 
@@ -170,24 +170,24 @@
                           <tbody>
                             <tr>
                               <td>
-                       <select class="form-control" name="empNo" required="required">                         
-                          <option>-사원 번호를 선택하세요-</option>
+                       <select class="form-control" id="empNo" name="empNo" required="required">                         
+                          <option value="">-사원 번호를 선택하세요-</option>
                           <c:forEach var='m' items="${mlist }">
                           <option value="${m.empNo }">${m.empNo }</option>
                           </c:forEach>
                         </select>
                       		</td>
                       		   <td>
-                       <select class="form-control" name="empName" required="required">
-                          <option>-사원명을 선택하세요-</option>
+                       <select class="form-control" id="empName" name="empName" required="required">
+                          <option value="">-사원명을 선택하세요-</option>
                           <c:forEach var='m' items="${mlist }">
                           <option value="${m.empName }">${m.empName }</option>
                           </c:forEach>
                         </select>
                       		</td>
                       		   <td>
-                      		   <select class="form-control" name="jobCode" required="required">
-                          <option>-직급을 선택하세요-</option>
+                      		   <select class="form-control" id="jobCode" name="jobCode" required="required">
+                          <option value="">-직급을 선택하세요-</option>
                           <c:forEach var='j' items="${joblist }">
                           <option value="${j.jobCode }">${j.jobName }</option>
                           </c:forEach>
@@ -195,8 +195,9 @@
                         
                       		</td>
                       		   <td>
-                        	<select class="form-control" name="depId" required="required">
-                          <option>-부서를 선택하세요-</option>
+                        	<select class="form-control" id="depId" name="depId" 
+                        	required="required" disabled>
+                          <option value="">-부서를 선택하세요-</option>
                           <c:forEach var='d' items="${deplist }">
                           <option value="${d.depId }">${d.depName }</option>
                           </c:forEach>
@@ -204,12 +205,104 @@
                       		</td>
                       		   <td>
                         <input type="text" id="depReason" name="depReason" required="required" placeholder="ex> 발령"
-                        class="form-control col-md-7 col-xs-12">
+                        class="form-control col-md-7 col-xs-12" disabled>
                       		</td>
-                      		  <td><button type="reset" class="btn btn-round btn-default">확인</button></td>
-                              <td><button type="submit" class="btn btn-round btn-default">입력</button></td>
+                      		  <td><button type="button" onclick="checkMember();" class="btn btn-round btn-default">확인</button></td>
+                              <td><button type="submit" id="checkResult" class="btn btn-round btn-default" disabled>입력</button></td>
                             </tr>
-                          
+                          <script>
+                          	function checkMember(){
+                          		
+                          		var empNo = $("#empNo").val();
+                          		var empName = $("#empName").val();	
+                          		var jobCode = $("#jobCode").val();
+                          		
+                          		
+                          		if(empNo == "" && empName == "" && jobCode == ""){
+                          			alert("정보를 입력하세요");
+                          		}else if(empNo == ""){
+                          			alert("사원번호를 선택하세요");
+                          		}else if(empName == ""){
+                          			alert("사원이름을 선택하세요");
+                          		}else if(jobCode == ""){
+                          			alert("직급을 선택하세요");
+                          		}else{
+                          			
+                          			$.ajax({
+                          				data:{empNo:empNo,
+                          					 empName:empName,
+                          					 jobCode:jobCode},
+                          				url:"checkMember.me",
+                          				success:function(data){
+                          					console.log(data);
+                          					
+                          					if(data > 0){
+                          						alert("사원정보가 일치합니다");
+                          						$("#depId").attr("disabled", false);
+                          						$("#depReason").attr("disabled", false);
+                          					}else{
+                          						alert("사원정보가 일치하지 않습니다");
+                          						$("#depId").attr("disabled", true);
+                          						$("#depReason").attr("disabled", true);
+                          						$("#checkResult").attr("disabled", true);			
+                          					}
+                          					
+                          				},error:function(){
+                          					console.log("사원확인 실패");
+                          				}
+	
+                          			});
+                          			
+                          		}
+     		
+                          	}  	
+                       </script>
+                     
+                       <script>
+                       $("#empNo").change(function(){
+                    	   $("#checkResult").attr("disabled", true);
+                    	   $("#depId").attr("disabled", true);
+     					   $("#depReason").attr("disabled", true);
+                    	   
+                       });
+                       
+                       $("#empName").change(function(){
+                    	   $("#checkResult").attr("disabled", true);
+                    	   $("#depId").attr("disabled", true);
+     					   $("#depReason").attr("disabled", true);
+                    	   
+                       });
+                                           
+                       $("#jobCode").change(function(){
+                    	   $("#checkResult").attr("disabled", true);
+                    	   $("#depId").attr("disabled", true);
+     					   $("#depReason").attr("disabled", true);
+                       });
+                       
+                       $("#depId").change(function(){
+                    	   
+                    	   if($("#depId").val() != ""){
+                    		   $("#checkResult").attr("disabled", false); 	
+                    	   }else{
+                    		   $("#checkResult").attr("disabled", true);
+                    		   alert("발령부서를 선택하세요");
+                    	   }  
+                    	   
+                       });
+                       
+                       $("#depReason").change(function(){
+                    	   
+                    	   if($("#depReason").val() != ""){
+                    		   $("#checkResult").attr("disabled", false);
+                    	   }else{
+                    		   $("#checkResult").attr("disabled", true);
+                    		   alert("사유를 입력하세요");
+                    	   }
+                    	   
+                       });
+                    
+                       
+                       </script>
                            
                           </tbody>
                         </table>

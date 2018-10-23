@@ -1,22 +1,19 @@
 package com.kh.dep.member.model.vo;
 
-import org.springframework.stereotype.Repository;
-
-@Repository
-public class Alarm implements java.io.Serializable{
+public class Alarm {
 	private int alarmNo;
 	private String alarmContents;
 	private int empNo;
-	private String receiveDate;
+	private String empName;
 	
 	public Alarm(){}
 	
-	public Alarm(int alarmNo, String alarmContents, int empNo, String receiveDate) {
+	public Alarm(int alarmNo, String alarmContents, int empNo, String empName) {
 		super();
 		this.alarmNo = alarmNo;
 		this.alarmContents = alarmContents;
 		this.empNo = empNo;
-		this.receiveDate = receiveDate;
+		this.empName = empName;
 	}
 
 	public int getAlarmNo() {
@@ -43,18 +40,18 @@ public class Alarm implements java.io.Serializable{
 		this.empNo = empNo;
 	}
 	
-	public String getReceiveDate() {
-		return receiveDate;
+	public String getEmpName() {
+		return empName;
 	}
 	
-	public void setReceiveDate(String receiveDate) {
-		this.receiveDate = receiveDate;
+	public void setEmpName(String empName) {
+		this.empName = empName;
 	}
 
 	@Override
 	public String toString() {
-		return "Alarm [alarmNo=" + alarmNo + ", alarmContents=" + alarmContents + ", empNo=" + empNo + ", receiveDate="
-				+ receiveDate + "]";
+		return "Alarm [alarmNo=" + alarmNo + ", alarmContents=" + alarmContents + ", empNo=" + empNo + ", empName="
+				+ empName + "]";
 	}
 
 }

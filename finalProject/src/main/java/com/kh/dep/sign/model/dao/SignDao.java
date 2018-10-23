@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import org.mybatis.spring.SqlSessionTemplate;
 
-import com.kh.dep.member.model.vo.Alarm;
 import com.kh.dep.sign.model.exception.SelectDocException;
 import com.kh.dep.sign.model.vo.Document;
 import com.kh.dep.sign.model.vo.InsertSign;
@@ -50,12 +49,6 @@ public interface SignDao {
 	ArrayList<Proceeding> selectProceeding(SqlSessionTemplate sqlSession, int empNo);
 
 	int deleteProceeding(SqlSessionTemplate sqlSession, Proceeding p);
-
-	int insertSignAlarm(SqlSessionTemplate sqlSession, Alarm al);
-
-	int nextApprovalMember(SqlSessionTemplate sqlSession, int docNo);
-
-	ArrayList<Document> selectReceiverList(SqlSessionTemplate sqlSession, int docNo);
 
 	
 }

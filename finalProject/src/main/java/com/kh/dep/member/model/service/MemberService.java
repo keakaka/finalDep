@@ -98,4 +98,7 @@ public interface MemberService {
 	int insertIdPwMember(int empNo);
 
 
+	int selectCheckMember(MemberSelect m);
+
+
 }

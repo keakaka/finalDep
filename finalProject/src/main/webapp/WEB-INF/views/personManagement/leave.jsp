@@ -69,7 +69,7 @@
 
 							<div class="row x_title">
 								<div class="col-md-6">
-									<h3>결재 승인</h3>
+									<h3>사원 관리</h3>
 								</div>
 								<div class="col-md-6">
 
@@ -174,7 +174,7 @@
                         <!-- <input type="number" id="empNo" name="empNo" required="required" placeholder="ex> 1001"
                         class="form-control col-md-7 col-xs-12"> -->
                         <select class="form-control" name="empNo" id="empNo" required="required">                         
-                          <option>-사원 번호를 선택하세요-</option>
+                          <option value="">-사원 번호를 선택하세요-</option>
                           <c:forEach var='m' items="${mlist }">
                           <option value="${m.empNo }">${m.empNo }</option>
                           </c:forEach>
@@ -184,7 +184,7 @@
                       <!--   <input type="text" id="empName" name="empName" required="required" placeholder="ex> 김아무개"
                         class="form-control col-md-7 col-xs-12"> -->
                         <select class="form-control" name="empName" id="empName" required="required">
-                          <option>-사원명을 선택하세요-</option>
+                          <option value="">-사원명을 선택하세요-</option>
                           <c:forEach var='m' items="${mlist }">
                           <option value="${m.empName }">${m.empName }</option>
                           </c:forEach>
@@ -192,7 +192,7 @@
                       		</td>
                       		   <td>
                         <select class="form-control" name="depId" id="depId" required="required">
-                          <option>-부서를 선택하세요-</option>
+                          <option value="">-부서를 선택하세요-</option>
                           <c:forEach var='d' items="${deplist }">
                           <option value="${d.depId }">${d.depName }</option>
                           </c:forEach>
@@ -200,7 +200,7 @@
                       		</td>
                       		   <td>
                         <select class="form-control" name="jobCode" id="jobCode" required="required">
-                          <option>-직급을 선택하세요-</option>
+                          <option value="">-직급을 선택하세요-</option>
                           <c:forEach var='j' items="${joblist }">
                           <option value="${j.jobCode }">${j.jobName }</option>
                           </c:forEach>
@@ -208,18 +208,90 @@
                       		</td>
                       		   <td>
                         <input type="date" id="leavein" name="leavein" required="required"
-                        class="form-control col-md-7 col-xs-12">
+                        class="form-control col-md-7 col-xs-12" disabled>
                       		</td>
-                      		  <td><button type="reset" class="btn btn-round btn-default">확인</button></td>
-                              <td><button type="submit" class="btn btn-round btn-default">입력</button></td>
+                      		  <td><button type="button" onclick="checkMember();" class="btn btn-round btn-default">확인</button></td>
+                              <td><button type="submit" class="btn btn-round btn-default" id="checkResult" disabled>입력</button></td>
                             </tr>
-                       <!--    <script>
-                          	function checkInput(){
+                      <script>
+                          	function checkMember(){
+                          		
+                          		var empNo = $("#empNo").val();
+                          		var empName = $("#empName").val();
+                          		var depId = $("#depId").val();
+                          		var jobCode = $("#jobCode").val();
                           		
                           		
-                          		
+                          		if(empNo == "" && empName == "" && depId == "" && jobCode == ""){
+                          			alert("정보를 입력하세요");
+                          		}else if(empNo == ""){
+                          			alert("사원번호를 선택하세요");
+                          		}else if(empName == ""){
+                          			alert("사원이름을 선택하세요");
+                          		}else if(depId == ""){
+                          			alert("부서를 선택하세요");
+                          		}else if(jobCode == ""){
+                          			alert("직급을 선택하세요");
+                          		}else{
+                          			
+                          			$.ajax({
+                          				data:{empNo:empNo,
+                          					 empName:empName,
+                          					 depId:depId,
+                          					 jobCode:jobCode},
+                          				url:"checkMember.me",
+                          				success:function(data){
+                          					console.log(data);
+                          					
+                          					if(data > 0){
+                          						alert("사원정보가 일치합니다");
+                          						$("#leavein").attr("disabled", false);
+                          					}else{
+                          						alert("사원정보가 일치하지 않습니다");
+                          						$("#checkResult").attr("disabled", true);
+                          					}
+                          					
+                          				},error:function(){
+                          					console.log("사원확인 실패");
+                          				}
+	
+                          			});
+                          			
+                          		}
+     		
                           	}  	
-                          </script> -->
+                       </script>
+                     
+                       <script>
+                       $("#empNo").change(function(){
+                    	   $("#checkResult").attr("disabled", true);
+                    	   $("#leavein").attr("disabled", true);
+                    	   
+                       });
+                       
+                       $("#empName").change(function(){
+                    	   $("#checkResult").attr("disabled", true);
+                    	   $("#leavein").attr("disabled", true);
+                    	   
+                       });
+                       
+                       $("#depId").change(function(){
+                    	   $("#checkResult").attr("disabled", true);
+                    	   $("#leavein").attr("disabled", true);
+                       });
+                       
+                       $("#jobCode").change(function(){
+                    	   $("#checkResult").attr("disabled", true);
+                    	   $("#leavein").attr("disabled", true);
+                       });
+                       
+                       $("#leavein").change(function(){
+                    	   $("#checkResult").attr("disabled", false);
+                    	   
+                       });
+                    
+                       
+                       </script>
                            
                           </tbody>
                         </table>

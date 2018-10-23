@@ -97,7 +97,8 @@
                 </div> -->
                 <div class="x_content">
                   <br />
-                  <form data-parsley-validate class="form-horizontal form-label-left" action="memberInsert.me" method="post" encType="multipart/form-data">
+                  <form data-parsley-validate class="form-horizontal form-label-left"
+                   action="memberInsert.me" method="post" encType="multipart/form-data">
 
                     <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">이름 <!-- <span class="required">*</span> -->
@@ -232,7 +233,8 @@
                     <div class="form-group">
                       <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                         <button type="reset" class="btn btn-primary">Cancel</button>
-                        <button type="submit" class="btn btn-success">Submit</button>
+                       	<button type="submit" class="btn btn-success">Submit</button>
+                       <!--  <button type="button" onclick="insertMember();" class="btn btn-success">Submit</button> -->
                       </div>
                     </div>
 
@@ -241,6 +243,15 @@
               </div>
             </div>
           </div>
+          <c:if test="${!empty empNo }">
+          <script>
+          $(window).load(function(){
+        	  alert("입력한 사원의 사원번호는 " + ${empNo} + "번 입니다.");
+          });
+          	    
+          </script>
+          </c:if>
+           
 							
 							
 							<!-- end  -->
