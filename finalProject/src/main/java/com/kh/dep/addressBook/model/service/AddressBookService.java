@@ -15,5 +15,7 @@ public interface AddressBookService {
 
 	AddressBook deleteAddressBook(AddressBook ab);
 
+	List<AddressBook> selectAddList2(AddressBook ab);
+
 
 }
