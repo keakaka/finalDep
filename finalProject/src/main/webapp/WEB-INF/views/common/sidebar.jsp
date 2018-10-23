@@ -4,7 +4,7 @@
       <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
       
       <div class="navbar nav_title" style="border: 0;" >
-         <a href="mainPage.mn?m=${sessionScope.loginUser.empNo}" class="site_title"><img src="${contextPath }/resources/images/DBDBDEP.png" width="200px" height="50px"></a>
+         <a href="#" class="site_title"><img src="${contextPath }/resources/images/DBDBDEP.png" width="200px" height="50px"></a>
       </div>
       <div class="clearfix"></div>
       
@@ -39,7 +39,6 @@
                      <li><a href="myJobPosition.me?var=${loginUser.empNo }">직책 변경 이력 조회</a></li>
                      <li><a href="myWorkingHours.me?var=${loginUser.empNo }">근태 이력 조회</a></li>
                      <li><a href="myVacation.me?var=${loginUser.empNo }">휴가 내역 조회</a></li>
-                     <li><a href="${ contextPath }/qrInsert.ms">QR출석</a><li>
                      <script type="text/javascript">
                      
                      </script>
@@ -77,7 +76,7 @@
                   </ul>
                </li>
                <li><a href="boardList.bo?depName=${sessionScope.loginUser.depName}"><i class="fa fa-clipboard"></i> 부서게시판 </a></li>
-               <li><a href="${ contextPath }/depESelect.de?loginUser=${sessionScope.loginUser.empNo}"><i class="fa fa-clipboard"></i>비상연락망</a></li>
+               <li><a href="${ contextPath }/depESelect.de?loginUser=${sessionScope.loginUser.depName}"><i class="fa fa-clipboard"></i>비상연락망</a></li>
                <!-- <li><a href="calendar.ca"><i class="fa fa-calendar"></i> 일정 관리 </a></li> -->
                <li>
                   <a><i class="fa fa-calendar"></i> 일정
@@ -101,7 +100,7 @@
                   <ul class="nav child_menu" style="display: none">
                      <li><a href="moveMemberInsert.me">사원 추가</a></li>
                      <li><a href="depMgt.pm">부서근태현황</a></li>                                                  
-                     <li><a href="promotion.pm">사원관리</a></li>
+                     <li><a href="promotion.pm">문서승인</a></li>
                      <li><a href="depVacation.pm">부서별 휴가자 조회</a></li>
                      <li><a href="depPromotion.pm">부서별 진급자 조회</a></li>
                      <li><a href="depleave.pm">부서별 퇴사자 조회</a></li>
@@ -112,6 +111,7 @@
 
                </c:if>
                <li><a href="logout.me"><i class="fa fa-user"></i> LogOut </a></li>
+               <li><a href="${ contextPath }/qrInsert.ms"></a><li>
             </ul>
 
          </div>

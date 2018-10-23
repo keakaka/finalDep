@@ -66,7 +66,9 @@
 }
 
 #userPhoto {
-    width: 370px;
+	/* width : 250px;
+	height : 320px; */
+    width: 340px;
     height: 500px;
 } 
 

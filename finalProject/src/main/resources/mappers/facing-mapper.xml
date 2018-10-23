@@ -100,9 +100,8 @@
 	<select id="selectNowFaicng" resultMap="FacingResultSet" parameterType="int">
 	SELECT FACING_NO ,WRITE_DATE FROM
 	FACING 
-	WHERE WRITE_DATE = (SELECT MAX(WRITE_DATE)FROM FACING WHERE EMP_NO=#{empNo})
-	AND EMP_NO = #{empNo}
-	AND ROWNUM = 1 
+	WHERE FACING_NO = (SELECT MAX(FACING_NO)FROM FACING WHERE EMP_NO=#{empNo})
+	AND EMP_NO = #{empNo} 
 	ORDER BY FACING_NO DESC
 	</select>
 
@@ -112,8 +111,8 @@
 	</insert>
 	
 	<insert id="insertAlram" parameterType="Alram">
-	INSERT INTO "FINAL"."ALARM" (ALARM_NO, ALARM_CONTENTS, EMP_NO , STATUS) 
-	VALUES (ALARM_NO.NEXTVAL,#{alramContents}, #{empNo}, 'Y')
+	INSERT INTO "FINAL"."ALARM" (ALARM_NO, ALARM_CONTENTS, EMP_NO , STATUS ,RECEIVE_DATE) 
+	VALUES (ALARM_NO.NEXTVAL,#{alramContents}, #{empNo}, 'Y', SYSDATE)
 	</insert>
 	
 	<!-- 출석후 페이지 -->
@@ -124,13 +123,6 @@
     AND WR.EMP_NO = #{empNo}
 	</select>
 	
-	<!-- 알람카운트(은비) -->
-	<select id="selectAlarmCount" parameterType="_int" resultType="_int">
-		SELECT COUNT(*)
-		FROM ALARM
-		WHERE EMP_NO=#{receiverEmpNo}
-		AND STATUS='Y' 
-	</select>
 
 </mapper>
 

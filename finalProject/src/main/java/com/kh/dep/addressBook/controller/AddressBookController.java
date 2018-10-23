@@ -96,9 +96,7 @@ public class AddressBookController {
 	
 	//주소록에서 삭제
 	@RequestMapping("deleteAddressBook.ad")
-	@ResponseBody
-	public Object deleteAddressBook(int empNo, int loginNo, HttpServletRequest request, Map<String, Object> map) {
-		
+	public void deleteAddressBook(int empNo, int loginNo, HttpServletResponse response) {
 		System.out.println("deleteAddressBook empNo : " + empNo);
 		System.out.println("deleteAddressBook loginNo : " + loginNo);
 		AddressBook ab = new AddressBook();
@@ -106,18 +104,6 @@ public class AddressBookController {
 		ab.setLoginNo(loginNo);
 		
 		AddressBook ab2 = abs.deleteAddressBook(ab);
-		System.out.println("AddressBookController delete ab2 : " + ab2);
-		
-		List<AddressBook> list22 = abs.selectAddList2(ab);
-		System.out.println("selectAdd list : " + list22);
-		
-		Map<String, Object> ret = new HashMap<String, Object>();
-	    
-		ret.put("list22", list22);
-	    ret.put("ab2", ab2);
-	    
-	    return ret;
-		
 	}
 	
 	@RequestMapping(value = "facing.ad",method=RequestMethod.POST)

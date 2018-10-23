@@ -570,18 +570,4 @@ public class MemberServiceImpl implements MemberService{
 		return result;
 	}
 
-	@Override
-	public int selectCheckMember(MemberSelect m) {
-		
-		int result = 0;
-		
-		if(m.getDepId() != ""){
-			result = md.selectCheckMember(sqlSession, m);
-		}else{
-			result = md.selectCheckMoveDepMember(sqlSession, m);
-		}
-			
-		return result;
-	}
-
 }

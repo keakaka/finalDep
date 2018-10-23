@@ -73,7 +73,11 @@
 							
 			<div class="col-md-12 col-sm-12 col-xs-12">
               <div class="x_panel">
+                <div class="x_title">
+                  <h2><i class="fa fa-bars"></i> Tabs <small>Float right</small></h2>
          
+                  <div class="clearfix"></div>
+                </div>
                 <div class="x_content">
 
                   <div class="" role="tabpanel" data-example-id="togglable-tabs">
@@ -95,7 +99,7 @@
                      <div class="col-md-18 col-sm-18 col-xs-18">
               <div class="x_panel">
                 <div class="x_title">
-                  <h2>받은쪽지함 <small>${loginUser.empName }</small></h2>
+                  <h2>받은쪽지함 <small>Users</small></h2>
                   <ul class="nav navbar-right panel_toolbox">
                     <li><a href="#"><i class="fa fa-chevron-up"></i></a>
                     </li>
@@ -162,6 +166,7 @@
 				success : function(data){
 					console.log('empName = ' + data.empName);
 					console.log('content : ' + data.facingContents);
+					console.log('empNo : ' + data.empNo);
 					var $div = $('.facingDiv');
 					var $writer = $('#fullname');
 					var $title = $('#email');
@@ -177,6 +182,15 @@
 					$content.html(data.facingContents);
 					$fileNo.val(data.facingNo);
 					$fileName.text(data.oriFileName);
+					
+					$('.returnFacing').click(function(){
+						
+						location.href = "replyFacing.ms?empNo=" + data.empNo;
+					
+					});
+					
+						
+						
 					
 				},
 				error : function(){
@@ -206,8 +220,10 @@
                           <input type="text" id="fullname" class="form-control" name="fullname" value='' required readonly/>
                           <input type="email" id="email" class="form-control" name="email" value='' data-parsley-trigger="change" required readonly />
                           <textarea id="facingContent" required="required" class="form-control" name="message" readonly></textarea>
-                          <a class="btn btn-primary returnFacing" type="button" href="${ contextPath }/replyFacing.ms?empNo=${loginUser.empNo}">답장</a>
-                          <button type="button" class="btn btn-primary fileName" type="button"></button>
+                          <%-- <a class="btn btn-primary returnFacing" type="button" href="${ contextPath }/replyFacing.ms?empNo=${loginUser.empNo}">답장</a>
+                           --%>
+                          <button type="button" class="btn btn-primary returnFacing" type="button">답장하기</button>
+                          <button type="button" class="btn btn-primary fileName" onClick = "Click()" type="button"></button>
                           </div>
                           </form>
                         </div>
@@ -375,7 +391,7 @@ function updateFacing(num , num2){
 			console.log("리스트값"+facingNo);
 		 	alert("성공!" + userNo);
 	
- 			window.location = "facinglist.ms?loginUser="+userNo;
+ 			window.location = "facingReceiveList.ms?loginUser="+userNo;
 			
 			/* if(data.length > 0){
 			

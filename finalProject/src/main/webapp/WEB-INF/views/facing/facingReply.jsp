@@ -110,7 +110,7 @@
 	                        <div class="control-group">
 	                          <div class="controls">
 	                            <div class="col-md-11 xdisplay_inputx form-group has-feedback">
-	                              <input type="text" class="form-control has-feedback-left" name="title" id="single_cal1" placeholder="제목을 입력하세요" aria-describedby="inputSuccess2Status" >
+	                              <input type="text" class="form-control has-feedback-left" name="title" id="single_cal1" placeholder="First Name" aria-describedby="inputSuccess2Status" >
 	                              <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
 	                              <span id="inputSuccess2Status" class="sr-only">(success)</span>
 	                            </div>

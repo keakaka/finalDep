@@ -19,7 +19,7 @@ public class DepEServiceImpl implements DepEService {
 	private SqlSessionTemplate sqlSession;
 
 	@Override
-	public ArrayList<DepE> selectDepList(int empNo) throws DepESelectListException {
+	public ArrayList<DepE> selectDepList(String empNo) throws DepESelectListException {
 		// TODO Auto-generated method stub
 		System.out.println("비상연락망 서비스 입장 : " + empNo);
 		ArrayList  DepEList = dd.selectDepeList(sqlSession , empNo);

@@ -73,7 +73,11 @@
 							
 			<div class="col-md-12 col-sm-12 col-xs-12">
               <div class="x_panel">
+                <div class="x_title">
+                  <h2><i class="fa fa-bars"></i> Tabs <small>Float right</small></h2>
          
+                  <div class="clearfix"></div>
+                </div>
                 <div class="x_content">
 
                   <div class="" role="tabpanel" data-example-id="togglable-tabs">
@@ -95,7 +99,7 @@
                      <div class="col-md-18 col-sm-18 col-xs-18">
               <div class="x_panel">
                 <div class="x_title">
-                  <h2>보낸쪽지함 <small>${loginUser.empName }</small></h2>
+                  <h2>보낸쪽지함 <small>Users</small></h2>
                   <ul class="nav navbar-right panel_toolbox">
                     <li><a href="#"><i class="fa fa-chevron-up"></i></a>
                     </li>
@@ -137,13 +141,13 @@
                           <tbody>
                           <c:forEach var="f" items="${FacingList}">
                             <tr>
-                            	<input type="hidden" value="${f.facingNo}" class="facingNo"/>
+                              <input type="hidden" value="${f.facingNo}" class="facingNo"/>
                               <td>${f.writeDate}</td> 
                               <td>${f.empName}</td>
                               <%-- <td><a href="${ contextPath }/facingSelectOne.ms?facingNo=${f.facingNo}">${f.facingTitle}</a></td> --%>
                               <td><a data-toggle="modal" data-target=".bs-example-modal-lg" class="showFacing" style="cursor:pointer">${f.facingTitle }</a></td>
                               <td>${f.facingContents }</td>
-                              <td><button class="btn btn-round btn-default" type=button" onclick="updateFacing(${f.facingNo}, ${sessionScope.loginUser.empNo})"/>삭제하기</td>
+                              <td><button class="btn btn-round btn-default" type="button" onclick="updateFacing(${f.facingNo})"/>삭제하기</td>
                             </tr>
   							</c:forEach>
                                                      
@@ -207,7 +211,7 @@
                           <input type="text" id="fullname" class="form-control" name="fullname" value='' required readonly/>
                           <input type="email" id="email" class="form-control" name="email" value='' data-parsley-trigger="change" required readonly />
                           <textarea id="facingContent" required="required" class="form-control" name="message" readonly></textarea>
-                          <a class="btn btn-primary returnFacing" type="button" href="${ contextPath }/replyFacing.ms?empNo=${loginUser.empNo}">답장</a>
+                          
                           <button type="button" class="btn btn-primary fileName" type="button"></button>
                           </div>
                           </form>
@@ -357,19 +361,19 @@
         <!-- 삭제하기 -->
 <script>
 
-function updateFacing(num , num2){
+function updateFacing(num){
 	//var facingNo = $("#facingNo").val();
 	var facingNo = num;
-	var userNo = num2;
+	/* var userNo = num2;
 	console.log(typeof userNo);
-	
+	 */
 	$.ajax({
 		url:"updateFacing.ms",
 		type:"post",
 		data:
 		{facingNo:facingNo,
-		userNo:userNo	
-		},
+	/* 	userNo:userNo	
+	 */	},
 		
 		success:function(data){
 					

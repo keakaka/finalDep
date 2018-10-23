@@ -21,7 +21,5 @@ public interface AddressBookDao {
 
 	AddressBook selectAdd2(AddressBook ab);
 
-	List<AddressBook> selectAddList2(AddressBook ab);
-
 
 }
