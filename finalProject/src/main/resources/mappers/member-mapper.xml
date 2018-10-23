@@ -1,0 +1,541 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Member">
+	<resultMap type="MemberSelect" id="memberResultSet">
+		<id property="empNo" column="EMP_NO" />
+		<result property="empId" column="EMP_ID" />
+		<result property="empPwd" column="EMP_PWD" />
+		<result property="empName" column="EMP_NAME" />
+		<result property="depName" column="DEP_NAME" />
+		<result property="jobName" column="JOB_NAME" />
+		<result property="positionName" column="POSITION_NAME" />
+		<result property="birthDate" column="BIRTH_DATE" />
+		<result property="email" column="EMAIL" />
+		<result property="phone" column="PHONE" />
+		<result property="emergencyPhone" column="EMERGENCY_PHONE" />
+		<result property="address" column="ADDRESS" />
+		<result property="salary" column="SALARY" />
+		<result property="hireDate" column="HIRE_DATE" />
+		<result property="leaveDate" column="LEAVE_DATE" />
+		<result property="phoneReveal" column="PHONE_REVEAL" />
+		<result property="status" column="STATUS" />
+		<result property="jobCode" column="JOB_CODE" />
+		<result property="depId" column="DEP_ID" />
+		<result property="positionNo" column="POSITION_NO" />
+		<result property="modiFileName" column="MODI_FILENAME" />
+		<result property="empType" column="EMP_TYPE" />
+		<result property="depReason" column="DEP_REASON" />
+	</resultMap>
+
+	<resultMap type="Member" id="memberInfoResultSet">
+		<id property="empNo" column="EMP_NO" />
+		<result property="empId" column="EMP_ID" />
+		<result property="empPwd" column="EMP_PWD" />
+		<result property="empName" column="EMP_NAME" />
+		<result property="birthDate" column="BIRTH_DATE" />
+		<result property="email" column="EMAIL" />
+		<result property="phone" column="PHONE" />
+		<result property="emergencyPhone" column="EMERGENCY_PHONE" />
+		<result property="address" column="ADDRESS" />
+		<result property="salary" column="SALARY" />
+		<result property="hireDate" column="HIRE_DATE" />
+		<result property="leaveDate" column="LEAVE_DATE" />
+		<result property="phoneReveal" column="PHONE_REVEAL" />
+		<result property="status" column="STATUS" />
+	</resultMap>
+
+
+	<resultMap type="MemberDepartment" id="memberDepResultSet">
+		<id property="depId" column="DEP_ID" />
+		<result property="depName" column="DEP_NAME" />
+		<result property="depPhone" column="DEP_PHONE" />
+		<result property="status" column="STATUS" />
+	</resultMap>
+
+	<resultMap type="MemberJob" id="memberJobResultSet">
+		<id property="jobCode" column="JOB_CODE" />
+		<result property="jobName" column="JOB_NAME" />
+	</resultMap>
+
+	<resultMap type="MemberPosition" id="memberPositResultSet">
+		<id property="positionNo" column="POSITION_NO" />
+		<result property="positionName" column="POSITION_NAME" />
+		<result property="status" column="STATUS" />
+	</resultMap>
+
+	<resultMap type="Department" id="myDepRecordResultSet">
+		<id property="depRecordNo" column="DEP_RECORD_NO" />
+		<result property="seqNum" column="ROWNUM" />
+		<result property="depName" column="DEP_NAME" />
+		<result property="depPhone" column="DEP_PHONE" />
+		<result property="depRecordDate" column="DEP_RECORD_DATE" />
+		<result property="depReason" column="DEP_REASON" />
+		<result property="empName" column="EMP_NAME" />
+	</resultMap>
+
+	<resultMap type="Job" id="myJobRecordResultSet">
+		<id property="jobRecordNo" column="JOB_RECORD_NO" />
+		<result property="seqNum" column="ROWNUM" />
+		<result property="jobName" column="JOB_NAME" />
+		<result property="jobRecordDate" column="JOB_RECORD_DATE" />
+		<result property="jobReason" column="JOB_REASON" />
+		<result property="empNo" column="EMP_NO" />
+	</resultMap>
+
+	<resultMap type="Position" id="myJobPositionRecordResultSet">
+		<id property="positionRecordNo" column="POSITION_RECORD_NO" />
+		<result property="seqNum" column="ROWNUM" />
+		<result property="positionName" column="POSITION_NAME" />
+		<result property="positionReason" column="POSITION_REASON" />
+		<result property="positionRecordDate" column="POSITION_RECORD_DATE" />
+		<result property="empName" column="EMP_NAME" />
+	</resultMap>
+
+	<resultMap type="Attachment" id="AttachResultSet">
+		<id property="fileNo" column="FILE_NO" />
+		<result property="oriFileName" column="ORI_FILENAME" />
+		<result property="modiFileName" column="MODI_FILENAME" />
+		<result property="uploadDate" column="UPLOAD_DATE" />
+		<result property="boardNo" column="BOARD_NO" />
+		<result property="docNo" column="DOC_NO" />
+		<result property="emailNo" column="EMAIL_NO" />
+		<result property="empNo" column="EMP_NO" />
+		<result property="empType" column="EMP_TYPE" />
+	</resultMap>
+
+	<resultMap type="Vacation" id="myVacationRecordResultSet">
+		<id property="vacNo" column="VAC_NO" />
+		<result property="empNo" column="EMP_NO" />
+		<result property="vacReason" column="VAC_REASON" />
+		<result property="vacType" column="VAC_TYPE" />
+		<result property="vacStartdate" column="VAC_STARTDATE" />
+		<result property="vacEnddate" column="VAC_ENDDATE" />
+	</resultMap>
+
+	<resultMap type="WorkingHours" id="myWorkingHoursRecordResultSet">
+		<id property="workingRecordNo" column="WORK_RECORD_NO" />
+		<result property="workingDate" column="WORKINGDATE" />
+		<result property="empNo" column="EMP_NO" />
+		<result property="attendTime" column="ATTENDTIME" />
+		<result property="leaveTime" column="LEAVETIME" />
+	</resultMap>
+	
+	<resultMap type="SalaryExcel" id="salaryRecordResultSet">
+		<result property="depName" column="DEP_NAME" />
+		<result property="jobName" column="JOB_NAME" />
+		<result property="empName" column="EMP_NAME" />
+		<result property="incomeDate" column="INCOME_DATE" />
+		<result property="basePay" column="BASE_PAY"/>
+		<result property="regularBonus" column="REGULAR_BONUS" />
+		<result property="taxFreeAlw" column="TAX_FREE_ALW" />
+		<result property="nationalPension" column="NATIONAL_PENSION" />
+		<result property="healthIns" column="HEALTH_INS" />
+		<result property="longtermcareIns" column="LONGTERMCARE_INS" />
+		<result property="employeeIns" column="EMPLOYEE_INS" />
+	</resultMap>
+	
+	<resultMap type="Alarm" id="myAlarmResultSet">
+		<id property="alarmNo" column="ALARM_NO" />
+		<result property="alarmContents" column="ALARM_CONTENTS" />
+		<result property="empNo" column="EMP_NO" />
+		<result property="empName" column="EMP_NAME" />
+	</resultMap>
+
+	<!-- 암호화된 비밀번호 조회용 쿼리문 -->
+	<select id="selectPwd" resultType="java.lang.String"
+		parameterType="java.lang.String">
+		SELECT EMP_PWD
+		FROM EMPLOYEE
+		WHERE EMP_ID = #{empId}
+		AND
+		STATUS = 'Y'
+	</select>
+
+	<!-- 내정보 수정시 암호화된 비밀번호 조회용 쿼리문 -->
+	<select id="selectPwd2" resultType="java.lang.String"
+		parameterType="java.lang.String">
+		SELECT EMP_PWD
+		FROM EMPLOYEE
+		WHERE EMP_ID = #{empId}
+		AND
+		STATUS='Y'
+	</select>
+
+	<!-- 비밀번호 일치 시 회원 정보 조회용 쿼리문 -->
+	<select id="selectLoginUser" resultMap="memberResultSet"
+		parameterType="MemberSelect">
+		SELECT ROWNUM, EMP_NO, EMP_ID, EMP_PWD, EMP_NAME,
+		DEP_NAME, JOB_NAME,
+		BIRTH_DATE, EMAIL, PHONE, EMERGENCY_PHONE, ADDRESS,
+		SALARY, HIRE_DATE, LEAVE_DATE, PHONE_REVEAL, STATUS, JOB_CODE, DEP_ID,
+		MODI_FILENAME, EMP_TYPE, POSITION_NO, POSITION_NAME
+		FROM (SELECT
+		E.EMP_NO, E.EMP_ID, E.EMP_PWD,
+		E.EMP_NAME,D.DEP_NAME,
+		J.JOB_NAME,
+		E.BIRTH_DATE, E.EMAIL, E.PHONE,
+		E.EMERGENCY_PHONE,
+		E.ADDRESS,
+		E.SALARY,
+		E.HIRE_DATE, E.LEAVE_DATE,
+		E.PHONE_REVEAL, E.STATUS, J.JOB_CODE,
+		D.DEP_ID, A.MODI_FILENAME, A.EMP_TYPE, PR.POSITION_NO, P.POSITION_NAME
+		FROM EMPLOYEE E
+		JOIN DEPT_RECORD DR ON(E.EMP_NO = DR.EMP_NO)
+		JOIN
+		DEPARTMENT D ON(D.DEP_ID = DR.DEP_ID)
+		JOIN JOB_RECORD JR ON(E.EMP_NO =
+		JR.EMP_NO)
+		JOIN JOB J ON (J.JOB_CODE = JR.JOB_CODE)
+		JOIN ATTACHMENT A
+		ON(A.EMP_NO = E.EMP_NO)
+		JOIN POSITION_RECORD PR ON(PR.EMP_NO =
+		E.EMP_NO)
+		JOIN POSITION P ON(P.POSITION_NO = PR.POSITION_NO)
+		WHERE
+		E.EMP_ID= #{empId}
+		AND
+		E.STATUS='Y'
+		AND A.EMP_TYPE='ET1'
+		ORDER BY
+		DR.DEP_RECORD_DATE DESC,
+		JR.JOB_RECORD_DATE DESC,
+		PR.POSITION_RECORD_DATE DESC)
+		WHERE ROWNUM = 1
+	</select>
+
+	<!-- 부서목록 조회용 쿼리문 -->
+	<select id="selectDep" resultMap="memberDepResultSet">
+		SELECT *
+		FROM DEPARTMENT
+		WHERE
+		STATUS = 'Y'
+	</select>
+
+	<!-- 직급목록 조회용 쿼리문 -->
+	<select id="selectJob" resultMap="memberJobResultSet">
+		SELECT *
+		FROM JOB
+	</select>
+
+	<!-- 직책 목록 조회용 쿼리문 -->
+
+	<select id="selectPosition" resultMap="memberPositResultSet">
+		SELECT *
+		FROM POSITION
+		WHERE
+		STATUS = 'Y'
+	</select>
+
+	<!-- 모든 사원 조회 -->
+	<select id="selectAllMember" resultMap="memberResultSet">
+		SELECT EMP_NO, EMP_NAME
+		FROM EMPLOYEE
+		WHERE STATUS = 'Y'
+		AND EMP_ID IS NOT NULL
+		AND EMP_PWD IS NOT NULL
+	</select>
+
+	<!-- 회원가입용 메소드 -->
+	<insert id="insertMember" parameterType="MemberSelect">
+		INSERT INTO EMPLOYEE
+		(EMP_NO, EMP_NAME, BIRTH_DATE, EMAIL, PHONE, EMERGENCY_PHONE, ADDRESS,
+		SALARY,
+		HIRE_DATE, PHONE_REVEAL, STATUS)
+		VALUES(EMP_NO.NEXTVAL,
+		#{empName}, #{birthDate}, #{email}, #{phone}, #{emergencyPhone},
+		#{address}, #{salary}, SYSDATE, #{phoneReveal}, DEFAULT)
+
+	</insert>
+	
+	<!-- 회원가입시 Id,Pw생성 -->
+		<update id="insertIdPwMember" parameterType="MemberSelect">
+		UPDATE EMPLOYEE SET EMP_ID = #{empNo}, EMP_PWD=#{empPwd}
+		WHERE EMP_NO = #{empNo}
+		</update>
+
+	<!-- 사진입력시 멤버 번호 조회 -->
+	<select id="selectempNumber" resultType="_int">
+		SELECT EMP_NO.CURRVAL
+		FROM DUAL
+	</select>
+
+	<!-- 회원 사진 및 서명 파일 입력 -->
+	<insert id="insertAttach" parameterType="Attachment">
+		INSERT INTO
+		ATTACHMENT(FILE_NO, ORI_FILENAME, MODI_FILENAME, UPLOAD_DATE, EMP_NO,
+		EMP_TYPE)
+		VALUES(FILE_NO.NEXTVAL, #{oriFileName}, #{modiFileName},
+		SYSDATE,#{empNo},
+		#{empType})
+
+	</insert>
+
+	<!-- 부서이동이력 입력 -->
+	<insert id="insertDepRecord" parameterType="MemberSelect">
+		INSERT INTO
+		DEPT_RECORD(DEP_RECORD_NO, DEP_RECORD_DATE, DEP_REASON, EMP_NO,
+		DEP_ID)
+		VALUES (DEP_RECORD_NO.NEXTVAL, SYSDATE, '입사', #{empNo},
+		#{depId})
+
+	</insert>
+
+	<!-- 직책 변경이력 입력 -->
+	<insert id="insertPositRecord" parameterType="MemberSelect">
+		INSERT INTO
+		POSITION_RECORD
+		VALUES(POSITION_RECORD_NO.NEXTVAL, #{positionNo}, '임시',
+		#{empNo}, SYSDATE)
+
+	</insert>
+
+	<!-- 직급 변경이력 입력 -->
+	<insert id="insertJobRecord" parameterType="MemberSelect">
+		INSERT INTO
+		JOB_RECORD(JOB_RECORD_NO, JOB_RECORD_DATE, JOB_REASON, JOB_CODE,
+		EMP_NO)
+		VALUES (JOB_RECORD_NO.NEXTVAL, SYSDATE, '입사', #{jobCode},
+		#{empNo})
+	</insert>
+
+
+	<!-- 퇴사 승인 처리 -->
+	<update id="updateLeaveMember" parameterType="MemberSelect">
+		UPDATE EMPLOYEE
+		SET
+		LEAVE_DATE = #{leavein}, STATUS = 'N'
+		WHERE EMP_NO = #{empNo}
+	</update>
+
+	<!-- 직급 변경이력 입력 -->
+	<insert id="insertMoveDept" parameterType="MemberSelect">
+		INSERT INTO
+		DEPT_RECORD(DEP_RECORD_NO, DEP_RECORD_DATE, DEP_REASON, EMP_NO,
+		DEP_ID)
+		VALUES (DEP_RECORD_NO.NEXTVAL, SYSDATE, #{depReason}, #{empNo},
+		#{depId})
+	</insert>
+
+
+
+	<!-- 내 정보 수정처리 -->
+	<update id="updateMyInfo">
+		UPDATE EMPLOYEE
+		SET EMP_NAME=#{empName},
+		PHONE=#{phone}, PHONE_REVEAL=#{phoneReveal},
+		EMERGENCY_PHONE=#{emergencyPhone}, EMAIL=#{email}, ADDRESS=#{address}
+		WHERE EMP_ID=#{empId}
+	</update>
+
+	<!-- 내 부서 이동 이력 조회 -->
+	<select id="selectMyDepRecord" resultMap="myDepRecordResultSet"
+		parameterType="String">
+		SELECT ROWNUM, DEP_RECORD_NO, DEP_NAME, DEP_PHONE,
+		DEP_RECORD_DATE, DEP_REASON, EMP_NAME
+		FROM(SELECT ROWNUM RNUM,
+		DR.DEP_RECORD_NO, D.DEP_NAME, D.DEP_PHONE, DR.DEP_RECORD_DATE,
+		DR.DEP_REASON, E.EMP_NAME
+		FROM DEPT_RECORD DR
+		JOIN DEPARTMENT D
+		ON(D.DEP_ID = DR.DEP_ID)
+		JOIN EMPLOYEE E ON(E.EMP_NO = DR.EMP_NO)
+		WHERE
+		D.STATUS = 'Y' AND E.EMP_ID = #{empId}
+		ORDER BY DR.DEP_RECORD_DATE
+		DESC)
+	</select>
+
+	<!-- 내 직급 이력 조회 -->
+	<select id="selectMyJobRecord" resultMap="myJobRecordResultSet"
+
+		parameterType="_int">
+		SELECT ROWNUM, JOB_RECORD_NO, JOB_NAME, JOB_RECORD_DATE,
+		JOB_REASON, EMP_NO
+		FROM(SELECT ROWNUM RNUM, JR.JOB_RECORD_NO,
+		J.JOB_NAME, JR.JOB_RECORD_DATE, JR.JOB_REASON, E.EMP_NO
+		FROM JOB_RECORD
+		JR
+		JOIN JOB J ON(J.JOB_CODE = JR.JOB_CODE)
+		JOIN EMPLOYEE E ON(E.EMP_NO =
+		JR.EMP_NO)
+		WHERE E.EMP_NO = #{empNo}
+		ORDER BY JR.JOB_RECORD_DATE DESC)
+	</select>
+
+
+	<!-- 내 직책 이력 조회 -->
+	<select id="selectMyJobPositionRecord" resultMap="myJobPositionRecordResultSet"
+		parameterType="_int">
+		SELECT ROWNUM, POSITION_RECORD_NO, POSITION_NAME,
+		POSITION_REASON, POSITION_RECORD_DATE, EMP_NAME
+		FROM(SELECT ROWNUM
+		RNUM, PR.POSITION_RECORD_NO, P.POSITION_NAME, PR.POSITION_REASON,
+		PR.POSITION_RECORD_DATE, E.EMP_NAME
+		FROM POSITION_RECORD PR
+		JOIN
+		POSITION P ON(P.POSITION_NO = PR.POSITION_NO)
+		JOIN EMPLOYEE E
+		ON(E.EMP_NO = PR.EMP_NO)
+		WHERE P.STATUS = 'Y' AND E.EMP_NO = #{empNo}
+		ORDER BY POSITION_RECORD_DATE DESC)
+	</select>
+
+	<insert id="insertMyVaction" parameterType="Vacation">
+		INSERT INTO VACATION
+		VALUES(VAC_NO.NEXTVAL, #{empNo}, #{vacReason}, #{vacType},
+		#{vacStartdate}, #{vacEnddate}, DEFAULT)
+	</insert>
+
+	<select id="selectMyVacationRecord" resultMap="myVacationRecordResultSet"
+		parameterType="_int">
+		SELECT VAC_NO, EMP_NO, VAC_REASON, VAC_TYPE,
+		TO_CHAR(VAC_STARTDATE, 'YYYY-MM-DD') VAC_STARTDATE,
+		TO_CHAR(VAC_ENDDATE, 'YYYY-MM-DD') VAC_ENDDATE
+		FROM VACATION
+		WHERE EMP_NO=#{empNo}
+		ORDER BY VAC_STARTDATE DESC
+	</select>
+
+	<!-- 내 휴가 이력 조회 -->
+
+	<select id="selectMyWorkingHoursRecord" resultMap="myWorkingHoursRecordResultSet"
+		parameterType="_int">
+		SELECT TO_CHAR(HOURS, 'YYYY-MM-DD') WORKINGDATE, MAX(TO_CHAR(HOURS,
+		'HH:mm:ss')) LEAVETIME, MIN(TO_CHAR(HOURS, 'HH24:mi:ss')) ATTENDTIME,
+		EMP_NO
+		FROM WORKING_RECORD
+		WHERE TO_CHAR(HOURS, 'YYYY-MM-DD') <![CDATA[ < ]]>=
+		TO_CHAR(SYSDATE, 'YYYY-MM-DD') AND EMP_NO=#{empNo}
+		GROUP BY EMP_NO,
+		TO_CHAR(HOURS, 'YYYY-MM-DD')
+	</select>
+
+	<select id="checkPw" resultType="int">
+		SELECT COUNT(*)
+		FROM EMPLOYEE
+		WHERE EMP_ID=#{empId} AND EMP_PWD=#{empPwd}
+	</select>
+
+	<update id="updateMyImageFile" parameterType="java.util.ArrayList">
+		UPDATE ATTACHMENT
+		SET MODI_FILENAME='${list.get(1)}', ORI_FILENAME='${list.get(2)}',
+		UPLOAD_DATE=SYSDATE
+		WHERE EMP_NO=${list.get(0)}
+	</update>
+	
+	<!-- <insert id="insertSalaryExcel" parameterType="SalaryExcel">
+		INSERT INTO SALARY(EMP_NO, BASE_PAY, REGULAR_BONUS, INCOME_DATE)
+		<foreach collection="list" item="item" separator=",">
+		VALUES	(#{item.empName},#{item.basePay},#{item.regularBonus},#{item.incomeDate})
+		</foreach>
+	</insert> -->
+	
+	<insert id="insertSalaryExcel" parameterType="SalaryExcel">
+		INSERT INTO SALARY(SALARY_NO, EMP_NO, BASE_PAY, REGULAR_BONUS, TAX_FREE_ALW, NATIONAL_PENSION, HEALTH_INS, EMPLOYEE_INS, LONGTERMCARE_INS, INCOME_DATE)
+		VALUES (SALARY_NO.NEXTVAL, (SELECT EMP_NO FROM EMPLOYEE WHERE EMP_NAME LIKE #{empName} ),#{basePay},#{regularBonus},#{taxFreeAlw},#{nationalPension},#{healthIns},#{employeeIns},#{longtermcareIns},#{incomeDate})
+	</insert>
+	
+	<select id="selectSalaryList" resultMap="salaryRecordResultSet">
+		SELECT D.DEP_NAME, J.JOB_NAME, E.EMP_NAME, S.BASE_PAY, S.INCOME_DATE, S.REGULAR_BONUS, S.TAX_FREE_ALW, S.NATIONAL_PENSION, S.HEALTH_INS, S.LONGTERMCARE_INS, S.EMPLOYEE_INS 
+      FROM SALARY S
+      JOIN EMPLOYEE E ON(E.EMP_NO = S.EMP_NO)
+      JOIN DEPT_RECORD DR ON(S.EMP_NO = DR.EMP_NO)
+      JOIN DEPARTMENT D ON(DR.DEP_ID = D.DEP_ID)
+      JOIN JOB_RECORD JR ON(S.EMP_NO = JR.EMP_NO)
+      JOIN JOB J ON(J.JOB_CODE = JR.JOB_CODE)
+      WHERE DEP_RECORD_DATE = (SELECT MAX(DEP_RECORD_DATE) 
+                               FROM DEPT_RECORD R 
+                               WHERE R.EMP_NO = S.EMP_NO)
+      AND JOB_RECORD_DATE = (SELECT MAX(JOB_RECORD_DATE) 
+                                FROM JOB_RECORD R 
+                                WHERE R.EMP_NO = S.EMP_NO)
+      AND D.STATUS = 'Y'
+	</select>
+	
+	<delete id="deleteAllEmpSalaryData">
+		DELETE FROM SALARY
+	</delete>
+	
+	<select id="selectSalaryCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM SALARY
+	</select>
+	
+	<select id="selectSearchCondition" resultMap="salaryRecordResultSet" parameterType="java.util.ArrayList">
+		SELECT D.DEP_NAME, J.JOB_NAME, E.EMP_NAME, S.INCOME_DATE, S.BASE_PAY, S.REGULAR_BONUS, S.TAX_FREE_ALW, S.NATIONAL_PENSION, S.HEALTH_INS, S.LONGTERMCARE_INS, S.EMPLOYEE_INS
+      FROM SALARY S
+      JOIN EMPLOYEE E ON(E.EMP_NO=S.EMP_NO)
+      JOIN JOB_RECORD JR ON(JR.EMP_NO=S.EMP_NO)
+      JOIN JOB J ON(J.JOB_CODE=JR.JOB_CODE)
+      JOIN DEPT_RECORD DR ON(DR.EMP_NO=S.EMP_NO)
+      JOIN DEPARTMENT D ON(D.DEP_ID=DR.DEP_ID)
+      WHERE DEP_RECORD_DATE = (SELECT MAX(DEP_RECORD_DATE) 
+                                 FROM DEPT_RECORD R 
+                                WHERE R.EMP_NO = S.EMP_NO)
+      AND JOB_RECORD_DATE = (SELECT MAX(JOB_RECORD_DATE) 
+                                FROM JOB_RECORD R 
+                               WHERE R.EMP_NO = S.EMP_NO)
+      AND D.STATUS = 'Y'
+      AND D.DEP_ID = ${list.get(0)}
+      AND J.JOB_CODE = ${list.get(1)}
+      AND S.INCOME_DATE LIKE ${list.get(2)}
+      AND E.EMP_NAME LIKE ${list.get(3)}
+	</select>
+	
+	<select id="selectMyAlarmList" parameterType="_int" resultMap="myAlarmResultSet">
+		SELECT ALARM_NO, ALARM_CONTENTS, EMP_NO, EMP_NAME
+		FROM ALARM A
+		JOIN EMPLOYEE USING(EMP_NO)
+		WHERE EMP_NO = #{empNo}
+		AND A.STATUS = 'Y'
+	</select>
+	
+	<select id="selectMyAlarmCount" parameterType="_int" resultType="_int">
+		SELECT COUNT(*)
+		FROM ALARM
+		WHERE EMP_NO=#{empNo}
+		AND STATUS='Y'
+	</select>
+	
+	<update id="updateMyAlarm" parameterType="_int">
+		UPDATE ALARM
+		SET STATUS='N'
+		WHERE ALARM_NO=#{alarmNo}
+	</update>
+
+	<insert id="insertFacingAttach" parameterType="Attachment">
+		INSERT INTO
+		ATTACHMENT(FILE_NO, ORI_FILENAME, MODI_FILENAME, UPLOAD_DATE,EMAIL_NO, EMP_NO,
+		EMP_TYPE)
+		VALUES(FILE_NO.NEXTVAL, #{oriFileName}, #{modiFileName},
+		SYSDATE,#{emailNo},#{empNo},'ET1')
+	</insert>
+
+	<select id="selectMySalaryRecord" parameterType="_int" resultMap="salaryRecordResultSet">
+		SELECT INCOME_DATE, BASE_PAY, REGULAR_BONUS, TAX_FREE_ALW, NATIONAL_PENSION, HEALTH_INS, LONGTERMCARE_INS, EMPLOYEE_INS 
+		FROM SALARY
+		WHERE EMP_NO=#{empNo}
+	</select>
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

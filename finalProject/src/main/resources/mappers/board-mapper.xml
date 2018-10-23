@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Board">
+	<resultMap type="Board" id="boardResultSet">
+		<id property="boardNo" column="BOARD_NO" />
+		<result property="empNo" column="EMP_NO" />
+		<result property="boardTitle" column="BOARD_TITLE" />
+		<result property="boardContent" column="BOARD_CONTENT" />
+		<result property="boardType" column="BOARD_TYPE" />
+		<result property="boardDate" column="BOARD_DATE" />
+		<result property="selectCount" column="SELECTCOUNT" />
+		<result property="status" column="STATUS" />
+		<result property="empName" column="EMP_NAME" />
+		<result property="jobName" column="JOB_NAME" />
+	</resultMap>
+
+	<resultMap type="Attachment" id="AttachResultSet">
+		<id property="fileNo" column="FILE_NO" />
+		<result property="oriFileName" column="ORI_FILENAME" />
+		<result property="modiFileName" column="MODI_FILENAME" />
+		<result property="uploadDate" column="UPLOAD_DATE" />
+		<result property="boardNo" column="BOARD_NO" />
+		<result property="docNo" column="DOC_NO" />
+		<result property="emailNo" column="EMAIL_NO" />
+		<result property="empNo" column="EMP_NO" />
+		<result property="empType" column="EMP_TYPE" />
+	</resultMap>
+
+
+	<!-- board list 조회 -->
+	<select id="selectBoardList" resultMap="boardResultSet"
+		parameterType="java.lang.String">
+		SELECT B.BOARD_NO,
+		B.EMP_NO, E.EMP_NAME, B.BOARD_TITLE,
+		B.BOARD_CONTENT,
+		B.BOARD_TYPE,
+		B.BOARD_DATE,
+		B.SELECTCOUNT, B.STATUS
+		FROM
+		BOARD B
+		JOIN
+		EMPLOYEE E
+		ON(B.EMP_NO = E.EMP_NO)
+		JOIN DEPT_RECORD DR
+		ON(E.EMP_NO = DR.EMP_NO)
+		JOIN DEPARTMENT D ON(D.DEP_ID = DR.DEP_ID)
+		WHERE B.STATUS = 'Y'
+		AND
+		B.BOARD_TYPE='BT1'
+		AND D.DEP_NAME = #{depName}
+		AND DEP_RECORD_DATE = (SELECT MAX(DEP_RECORD_DATE) FROM DEPT_RECORD DR
+		WHERE DR.EMP_NO = B.EMP_NO)
+		ORDER BY B.BOARD_NO DESC
+	</select>
+
+
+
+	<!-- Board One 조회 -->
+	<select id="selectOneBoard" resultMap="boardResultSet"
+		parameterType="_int">
+		SELECT B.BOARD_NO,
+		B.EMP_NO, E.EMP_NAME,J.JOB_NAME,
+		B.BOARD_TITLE,
+		B.BOARD_CONTENT, B.BOARD_TYPE,B.BOARD_DATE,
+		B.SELECTCOUNT, B.STATUS
+		FROM BOARD B
+		JOIN EMPLOYEE E ON(B.EMP_NO =
+		E.EMP_NO)
+		JOIN JOB_RECORD JR ON(JR.EMP_NO = E.EMP_NO)
+		JOIN JOB J
+		ON(J.JOB_CODE = JR.JOB_CODE)
+		WHERE B.STATUS = 'Y'
+		AND JOB_RECORD_DATE =
+		(SELECT MAX(JOB_RECORD_DATE)
+		FROM JOB_RECORD JR
+		WHERE JR.EMP_NO =
+		B.EMP_NO)
+		AND B.BOARD_TYPE='BT1'
+		AND B.BOARD_NO = #{bid}
+	</select>
+
+	<insert id="insertWirteBoard" parameterType="Board">
+		INSERT INTO
+		BOARD(BOARD_NO, EMP_NO, BOARD_TITLE, BOARD_DATE,
+		BOARD_CONTENT,
+		BOARD_TYPE, SELECTCOUNT, STATUS)
+		VALUES (BOARD_NO.NEXTVAL, #{empNo},
+		#{boardTitle},SYSDATE,
+		#{boardContent}, 'BT1', '0', DEFAULT)
+	</insert>
+
+	<select id="selectBoardNumber" resultType="_int">
+		SELECT
+		BOARD_NO.CURRVAL
+		FROM DUAL
+	</select>
+
+	<insert id="insertBoardAttach" parameterType="Attachment">
+		INSERT INTO
+		ATTACHMENT(FILE_NO, ORI_FILENAME, MODI_FILENAME, UPLOAD_DATE, EMP_NO,
+		BOARD_NO)
+		VALUES(FILE_NO.NEXTVAL, #{oriFileName}, #{modiFileName},
+		SYSDATE,#{empNo},
+		#{boardNo})
+	</insert>
+
+	<select id="selectDownList" parameterType="Board" resultMap="AttachResultSet">
+		SELECT *
+		FROM ATTACHMENT
+		WHERE EMP_NO = #{empNo}
+		AND BOARD_NO =
+		#{boardNo}
+	</select>
+
+	<update id="updateOneBoard" parameterType="Board">
+		UPDATE BOARD
+		SET
+		BOARD_TITLE = #{boardTitle}, BOARD_CONTENT= #{boardContent},
+		BOARD_DATE = SYSDATE
+		WHERE BOARD_NO = #{boardNo}
+	</update>
+
+	<delete id="deleteBoardAttach" parameterType="_int">
+		DELETE FROM
+		ATTACHMENT
+		WHERE BOARD_NO = #{boardNo}
+	</delete>
+
+	<update id="deleteBoard" parameterType="_int">
+		UPDATE BOARD
+		SET STATUS =
+		'N'
+		WHERE BOARD_NO = #{boardNo}
+	</update>
+
+	<update id="updateCountBoard" parameterType="_int">
+		UPDATE BOARD
+		SET SELECTCOUNT =
+		(SELECT SELECTCOUNT FROM BOARD WHERE BOARD_NO = #{boardNo}) + 1
+		WHERE BOARD_NO = #{boardNo}
+	</update>
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

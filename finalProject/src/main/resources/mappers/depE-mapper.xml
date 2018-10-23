@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DepE">
+	<resultMap type="DepE" id="DepEResultSet">
+		<id property="empNo" column="EMP_NO" />
+		<result property="jobCode" column="JOB_CODE" />
+		<result property="depId" column="DEP_ID" />
+		<result property="empName" column="EMP_NAME" />
+		<result property="depName" column="DEP_NAME" />
+		<result property="jobName" column="JOB_NAME" />
+		<result property="emergencyPhone" column="EMERGENCY_PHONE" />
+	</resultMap>
+	
+	
+	
+	<!-- 비상연락망 조회 -->
+	<select id="selectDepeList" resultMap="DepEResultSet" parameterType="int">
+	SELECT EMP_NAME,JOB_NAME,D.DEP_NAME,EMERGENCY_PHONE  FROM EMPLOYEE E 
+	JOIN DEPT_RECORD DR ON (E.EMP_NO = DR.EMP_NO)
+	JOIN DEPARTMENT D ON (DR.DEP_ID = D.DEP_ID)
+	JOIN JOB_RECORD JR ON (E.EMP_NO = JR.EMP_NO)
+	JOIN JOB J ON (JR.JOB_CODE = J.JOB_CODE)
+	WHERE DR.DEP_ID = (SELECT DR.DEP_ID FROM DEPT_RECORD DR WHERE DR.EMP_NO = #{empNo})
+	</select>
+
+	
+		
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

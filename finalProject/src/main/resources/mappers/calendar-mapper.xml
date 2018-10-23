@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Calendar">
+	<resultMap type="MemberSelect" id="memberResultSet">
+		<id property="empNo" column="EMP_NO" />
+		<result property="empId" column="EMP_ID" />
+		<result property="empPwd" column="EMP_PWD" />
+		<result property="empName" column="EMP_NAME" />
+		<result property="depName" column="DEP_NAME" />
+		<result property="jobName" column="JOB_NAME" />
+		<result property="birthDate" column="BIRTH_DATE" />
+		<result property="email" column="EMAIL" />
+		<result property="phone" column="PHONE" />
+		<result property="emergencyPhone" column="EMERGENCY_PHONE" />
+		<result property="address" column="ADDRESS" />
+		<result property="salary" column="SALARY" />
+		<result property="hireDate" column="HIRE_DATE" />
+		<result property="leaveDate" column="LEAVE_DATE" />
+		<result property="phoneReveal" column="PHONE_REVEAL" />
+		<result property="status" column="STATUS" />
+		<result property="jobCode" column="JOB_CODE" />
+		<result property="depId" column="DEP_ID" />
+		<result property="oriFileName" column="ORI_FILENAME" />
+		<result property="empType" column="EMP_TYPE" />
+	</resultMap>
+	
+	<resultMap type="MemberDepartment" id="memberDepResultSet">
+		<id property="depId" column="DEP_ID" />
+		<result property="depName" column="DEP_NAME" />
+		<result property="depPhone" column="DEP_PHONE" />
+		<result property="status" column="STATUS" />
+	</resultMap>
+	
+	<resultMap type="MemberJob" id="memberJobResultSet">
+		<id property="jobCode" column="JOB_CODE" />
+		<result property="jobName" column="JOB_NAME" />
+	</resultMap>
+	
+	<resultMap type="AddressBook" id="AddressBook">
+		<id property="empNo" column="EMP_NO" />
+		<result property="addressBookId" column="ADDRESSBOOK_ID" />
+		<result property="depName" column="DEP_NAME" />
+		<result property="empName" column="EMP_NAME" />
+		<result property="jobName" column="JOB_NAME" />
+		<result property="positionName" column="POSITION_NAME" />
+		<result property="phone" column="PHONE" />
+		<result property="email" column="EMAIL" />
+		<result property="loginNo" column="LOGIN_NO" />
+	</resultMap>
+	
+	<resultMap type="Calendar" id="Calendar">
+		<id property="scheduleNo" column="SCHEDULE_NO" />
+		<result property="empNo" column="EMP_NO" />
+		<result property="empName" column="EMP_NAME"/>
+		<result property="scheduleTitle" column="SCHEDULE_TITLE" />
+		<result property="scheduleContent" column="SCHEDULE_CONTENT" />
+		<result property="scheStartDate" column="SCHE_STARTDATE" />
+		<result property="scheEndDate" column="SCHE_ENDDATE" />
+		<result property="scheType" column="SCHE_TYPE" />
+	</resultMap>
+	
+	<select id="selectAttList" parameterType="java.lang.String" resultMap = "AddressBook">
+		SELECT EMP_NAME, JOB_NAME, POSITION_NAME, PHONE, EMAIL, EMP_NO, DEP_NAME, LOGIN_NO
+		FROM ADDRESSBOOK
+	</select>
+	
+	<select id="searchAttendance" parameterType="java.lang.String" resultMap = "memberResultSet">
+		SELECT E.EMP_NO, D.DEP_NAME, E.EMP_NAME, J.JOB_NAME, P.POSITION_NAME, B.LOGIN_NO, B.ADDRESSBOOK_ID
+		FROM EMPLOYEE E
+		LEFT JOIN DEPT_RECORD DR ON (E.EMP_NO = DR.EMP_NO)
+		LEFT JOIN DEPARTMENT D ON (DR.DEP_ID = D.DEP_ID)
+		LEFT JOIN JOB_RECORD JE ON (E.EMP_NO = JE.EMP_NO)
+		LEFT JOIN JOB J ON (JE.JOB_CODE = J.JOB_CODE)
+		LEFT JOIN POSITION_RECORD PR ON (PR.EMP_NO = E.EMP_NO)
+		LEFT JOIN POSITION P ON (PR.POSITION_NO = P.POSITION_NO)
+		LEFT JOIN ADDRESSBOOK B ON (E.EMP_NO = B.EMP_NO)
+		WHERE E.EMP_NAME = #{attName}
+	</select>
+	
+	<insert id="insertCalendar" parameterType="Calendar">
+		INSERT INTO SCHEDULE VALUES(SCHEDULE_NO.NEXTVAL, #{empNo}, #{scheduleTitle}, #{scheduleContent}, #{scheStartDate}, #{scheEndDate}, #{scheType})
+	</insert>
+	
+	<select id="selectCalendar" parameterType="Calendar" resultMap="Calendar">
+		SELECT EMP_NO, SCHEDULE_NO, SCHEDULE_TITLE, SCHEDULE_CONTENT, SCHE_STARTDATE, SCHE_ENDDATE, SCHE_TYPE
+		FROM SCHEDULE
+		WHERE EMP_NO = #{empNo} AND SCHE_TYPE = #{scheType}
+	</select>
+	
+	<select id="selectCalendar2" parameterType="Calendar" resultMap="Calendar">
+		SELECT S.EMP_NO, E.EMP_NAME, SCHEDULE_NO, SCHEDULE_TITLE, SCHEDULE_CONTENT, SCHE_STARTDATE, SCHE_ENDDATE, SCHE_TYPE
+		FROM SCHEDULE S
+		JOIN EMPLOYEE E ON(S.EMP_NO = E.EMP_NO)
+		WHERE SCHE_TYPE = #{scheType}
+	</select>
+	
+	
+	<select id="selectCurval" resultType="int">
+		SELECT SCHEDULE_NO.CURRVAL
+		FROM DUAL
+	</select>
+	
+	<delete id="deleteCalendar" parameterType="Calendar">
+		DELETE FROM SCHEDULE
+    	WHERE SCHEDULE_NO = #{scheduleNo}
+	</delete>
+	
+	<select id="updateModalCalendar" parameterType="Calendar" resultMap="Calendar">
+		SELECT SCHEDULE_NO, EMP_NO, SCHEDULE_TITLE, SCHEDULE_CONTENT
+		FROM SCHEDULE
+		WHERE EMP_NO = #{empNo} AND SCHEDULE_NO = #{scheduleNo}
+	</select>
+
+
+	<update id="updateCalendar" parameterType="Calendar">
+		UPDATE SCHEDULE
+		SET SCHEDULE_TITLE = #{scheduleTitle}, SCHEDULE_CONTENT = #{scheduleContent}
+		WHERE SCHEDULE_NO = #{scheduleNo}
+	</update>
+	
+	<select id="selectEmpNo" resultType="int" >
+		SELECT EMP_NO
+		FROM SCHEDULE
+		WHERE SCHEDULE_NO = #{next}
+	</select>
+	
+	<select id="selectEmpName" resultType="java.lang.String">
+		SELECT E.EMP_NAME
+		FROM EMPLOYEE E
+		JOIN SCHEDULE S ON(E.EMP_NO = S.EMP_NO)
+		WHERE SCHEDULE_NO = #{next}
+	</select>
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

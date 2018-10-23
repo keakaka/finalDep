@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- xml문서의 유효성 체크를 위해 필요한 부분 -->
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<!--  xml문서의 유효성 체크를 위해 필요한 부분  -->
+<configuration>
+	<typeAliases>
+		<typeAlias type="com.kh.dep.member.model.vo.Member" alias="Member"/>
+		<typeAlias type="com.kh.dep.member.model.vo.MemberSelect" alias="MemberSelect"/>
+		<typeAlias type="com.kh.dep.member.model.vo.Department" alias="Department"/>
+		<typeAlias type="com.kh.dep.member.model.vo.MemberDepartment" alias="MemberDepartment"/>
+		<typeAlias type="com.kh.dep.member.model.vo.MemberJob" alias="MemberJob"/>
+		<typeAlias type="com.kh.dep.member.model.vo.MemberPosition" alias="MemberPosition"/>
+		<typeAlias type="com.kh.dep.member.model.vo.Job" alias="Job"/>
+		<typeAlias type="com.kh.dep.member.model.vo.Position" alias="Position"/>
+		<typeAlias type="com.kh.dep.attachment.model.vo.Attachment" alias="Attachment"/>
+		<typeAlias type="com.kh.dep.addressBook.model.vo.AddressBook" alias="AddressBook"/>
+		<typeAlias type="com.kh.dep.facing.model.vo.Facing" alias="Facing"/>	
+		<typeAlias type="com.kh.dep.facing.model.vo.WorkingRecord" alias="WorkingRecord"/>
+		<typeAlias type="com.kh.dep.member.model.vo.Vacation" alias="Vacation"/>
+		<typeAlias type="com.kh.dep.member.model.vo.WorkingHours" alias="WorkingHours"/>
+		<typeAlias type="com.kh.dep.sign.model.vo.MemberDep" alias="MemberDep"/>
+		<typeAlias type="com.kh.dep.calendar.model.vo.Calendar" alias="Calendar"/>
+		<typeAlias type="com.kh.dep.depEmergency.model.vo.DepE" alias="DepE"/>
+		<typeAlias type="com.kh.dep.board.model.vo.Board" alias="Board"/>
+		<typeAlias type="com.kh.dep.personManagement.model.vo.Working" alias="Working"/>
+		<typeAlias type="com.kh.dep.sign.model.vo.InsertSign" alias="InsertSign"/>
+		<typeAlias type="com.kh.dep.sign.model.vo.Document" alias="Document"/>
+		<typeAlias type="com.kh.dep.member.model.vo.SalaryExcel" alias="SalaryExcel"/>
+		<typeAlias type="com.kh.dep.personManagement.model.vo.VacationLi" alias="VacationLi"/>
+		<typeAlias type="com.kh.dep.personManagement.model.vo.PromotionLi" alias="PromotionLi"/>
+		<typeAlias type="com.kh.dep.personManagement.model.vo.DepLeave" alias="DepLeave"/>
+		<typeAlias type="com.kh.dep.personManagement.model.vo.DepMoveDepRecord" alias="DepmoveRecord"/>
+		<typeAlias type="com.kh.dep.personManagement.model.vo.VacationIn" alias="VacationIn"/>
+		<typeAlias type="com.kh.dep.personManagement.model.vo.PromotionIn" alias="PromotionIn"/>
+		<typeAlias type="com.kh.dep.facing.model.vo.FacingInsertR" alias="FacingInsertR"/>
+		<typeAlias type="com.kh.dep.facing.model.vo.FacingInsert" alias="FacingInsert"/>
+		<typeAlias type="com.kh.dep.facing.model.vo.Alram" alias="Alram"/>
+		<typeAlias type="com.kh.dep.sign.model.vo.Proceeding" alias="Proceeding"/>
+		<typeAlias type="com.kh.dep.facing.model.vo.WorkingQr" alias="WorkingQr"/>
+		<typeAlias type="com.kh.dep.member.model.vo.Alarm" alias="Alarm"/>	
+		
+	</typeAliases>
+	
+	<mappers>
+		<mapper resource="mappers/member-mapper.xml"/>
+		<mapper resource="mappers/addressBook-mapper.xml"/>
+		<mapper resource="mappers/facing-mapper.xml"/>		
+		<mapper resource="mappers/sign-mapper.xml"/>
+		<mapper resource="mappers/calendar-mapper.xml"/>
+		<mapper resource="mappers/depE-mapper.xml"/>
+		<mapper resource="mappers/board-mapper.xml"/>
+		<mapper resource="mappers/working-mapper.xml"/>
+	</mappers>
+	
+	
+</configuration>
+
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

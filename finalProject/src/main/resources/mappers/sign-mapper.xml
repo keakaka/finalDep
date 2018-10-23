@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sign">
+	<resultMap type="MemberDep" id="MemberDepList">
+		<id property="empNo" column="EMP_NO" />
+		<result property="empName" column="EMP_NAME" />
+		<result property="depName" column="DEP_NAME" />
+		<result property="jobName" column="JOB_NAME" />
+		<result property="positionName" column="POSITION_NAME" />
+	</resultMap>
+	<resultMap type="InsertSign" id="InsertSignList">
+		<id property="docNo" column="DOC_NO"/>
+		<result property="writer" column="WRITER"/>
+		<result property="originFileName" column="ORI_FILENAME" />
+		<result property="changeName" column="MODI_FILENAME" />
+		<result property="signTitle" column="DOC_TITLE" />
+		<result property="signContent" column="DOC_CONTENT" />
+		<result property="empNo" column="EMP_NO" />
+	</resultMap>
+	<resultMap type="Document" id="DocumentList">
+		<id property="docNo" column="DOC_NO"/>
+		<result property="docTitle" column="DOC_TITLE"/>
+		<result property="docContent" column="DOC_CONTENT"/>
+		<result property="docformNo" column="DOCFORM_NO"/>
+		<result property="writeDate" column="WRITE_DATE"/>
+		<result property="empNo" column="EMP_NO"/>
+		<result property="writer" column="EMP_NAME"/>
+		<result property="appStatus" column="APP_STATUS"/>
+		<result property="appReject" column="APP_REJECT"/>
+		<result property="approvalStatus" column="APPROVAL_STATUS"/>
+		<result property="appReason" column="APP_REASON"/>
+		<result property="approvalDate" column="APPROVAL_DATE"/>
+	</resultMap>
+	<resultMap type="Proceeding" id="ProceedList">
+		<id property="proceedNo" column="PROCEED_NO"/>
+		<result property="empNo" column="EMP_NO"/>
+		<result property="empName" column="EMP_NAME"/>
+		<result property="roomName" column="ROOM_NAME"/>
+		<result property="roomContent" column="ROOM_CONTENT"/>
+		<result property="saveDate" column="SAVE_DATE"/>
+		<result property="status" column="STATUS"/>
+	</resultMap>
+	
+	<resultMap type="Alarm" id="AlarmResultSet">
+		<result property="alarmNo" column="ALARM_NO" />
+		<result property="alarmContents" column="ALARM_CONTENTS" />	
+		<result property="empNo" column="EMP_NO" />
+		<result property="status" column="STATUS" />
+		<result property="receiveDate" column="RECEIVE_DATE" />
+	</resultMap>
+	
+	<!-- 부서별 부서원 목록 조회 -->
+	<select id="selectMemberDep" resultMap="MemberDepList" parameterType="MemberDep">
+		SELECT E.EMP_NO, E.EMP_NAME, D.DEP_NAME, J.JOB_NAME, P.POSITION_NAME FROM EMPLOYEE E
+		LEFT JOIN DEPT_RECORD DR ON(E.EMP_NO = DR.EMP_NO)
+		LEFT JOIN DEPARTMENT D ON(DR.DEP_ID = D.DEP_ID)
+		LEFT JOIN JOB_RECORD JR ON(E.EMP_NO = JR.EMP_NO)
+		LEFT JOIN JOB J ON(J.JOB_CODE = JR.JOB_CODE)
+		LEFT JOIN POSITION_RECORD PR ON(E.EMP_NO = PR.EMP_NO)
+		LEFT JOIN POSITION P ON(P.POSITION_NO = PR.POSITION_NO)
+		WHERE DEP_RECORD_DATE = (SELECT MAX(DEP_RECORD_DATE) FROM DEPT_RECORD R WHERE R.EMP_NO = E.EMP_NO)
+		AND JOB_RECORD_DATE = (SELECT MAX(JOB_RECORD_DATE) FROM JOB_RECORD R WHERE R.EMP_NO = E.EMP_NO)
+		AND POSITION_RECORD_DATE = (SELECT MAX(POSITION_RECORD_DATE) FROM POSITION_RECORD R WHERE R.EMP_NO = E.EMP_NO)
+		AND DEP_NAME = #{depName}
+		ORDER BY 1
+	</select>
+	
+	
+	
+	<!-- DOCAPPROVAL Insert -->
+	<insert id="insertDocApproval" parameterType="InsertSign">
+		INSERT INTO DOCAPPROVAL
+		VALUES(DOC_NO.NEXTVAL, #{signTitle}, #{signContent}, 1, SYSDATE, #{writer})
+	</insert>
+	
+	<!-- DocNo 시퀀스 현재값 조회 -->
+	<select id="selectGetDocNoSeq" resultType="_int">
+		SELECT DOC_NO.CURRVAL FROM DUAL
+	</select>
+	
+	<!-- Approval_Record Insert -->
+	<insert id="insertApprovalRecord" parameterType="InsertSign">
+		INSERT INTO APPROVAL_RECORD
+		VALUES(APPRECORD_NO.NEXTVAL, #{docNo}, NULL, 'AP1', #{empNo}, NULL)
+	</insert>
+	
+	<!-- Receiving_check Insert -->
+	<insert id="insertReceivingCheck" parameterType="InsertSign">
+		INSERT INTO RECEIVING_CHECK
+		VALUES(#{docNo}, #{empNo})
+	</insert>
+	
+	<!-- Attachment Insert -->
+	<insert id="insertAttachment" parameterType="InsertSign">
+		INSERT INTO ATTACHMENT
+		VALUES(FILE_NO.NEXTVAL, #{originFileName}, #{changeName}, SYSDATE, NULL, #{docNo}, NULL, null, null)
+	</insert>
+	
+	<!-- 내가 기안한 문서 조회 -->
+	<select id="selectImWriter" parameterType="Document" resultMap="DocumentList">
+		SELECT D.DOC_NO, DOC_TITLE, DOC_CONTENT, WRITE_DATE, EMP_NAME, 
+		(SELECT COUNT(*) FROM APPROVAL_RECORD WHERE APPROVAL_STATUS = 'AP1' AND DOC_NO = D.DOC_NO) AS APP_STATUS,
+        (SELECT COUNT(*) FROM APPROVAL_RECORD WHERE APPROVAL_STATUS = 'AP3' AND DOC_NO = D.DOC_NO) AS APP_REJECT
+		FROM DOCAPPROVAL D
+		JOIN EMPLOYEE E ON(WRITER = EMP_NO) 
+		WHERE WRITER = #{empNo}
+	</select>
+	
+	<!-- 결재할 문서 조회 위해 자신이 결재선에 포함된 문서 번호 조회  -->
+	<select id="selectGetDocNo" parameterType="Document" resultType="_int">
+		SELECT DOC_NO
+		FROM APPROVAL_RECORD
+		WHERE EMP_NO = #{empNo}
+		AND APPRECORD_NO IN 
+			(SELECT APPRECORD_NO FROM 
+				(SELECT DOC_NO, MIN(APPRECORD_NO) AS APPRECORD_NO FROM APPROVAL_RECORD WHERE APPROVAL_STATUS = 'AP1' GROUP BY DOC_NO ORDER BY 1))
+	</select>
+	
+	<!-- 결재 할 문서 조회 -->
+	<select id="selectApprovalList" parameterType="Document" resultMap="DocumentList">
+		SELECT DOC_NO, DOC_TITLE, DOC_CONTENT, WRITE_DATE, EMP_NAME, APP_STATUS FROM(
+		SELECT D.DOC_NO, DOC_TITLE, DOC_CONTENT, WRITE_DATE, EMP_NAME,
+		(SELECT COUNT(*) FROM APPROVAL_RECORD WHERE APPROVAL_STATUS = 'AP1' AND DOC_NO = D.DOC_NO) AS APP_STATUS,
+		(SELECT COUNT(*) FROM APPROVAL_RECORD WHERE APPROVAL_STATUS = 'AP3' AND DOC_NO = D.DOC_NO) AS AP3COUNT
+		FROM  DOCAPPROVAL D
+		JOIN EMPLOYEE E ON(WRITER = EMP_NO)
+		WHERE DOC_NO = #{docNo})
+		WHERE AP3COUNT = 0
+	</select>
+	
+	<!-- 수신 참조된 문서번호 조회 -->
+	<select id="selectGetRecDocNo" parameterType="Document" resultType="_int">
+		SELECT DOC_NO 
+		FROM RECEIVING_CHECK 
+		WHERE EMP_NO = #{empNo}
+	</select>
+	
+	<!-- 수신 참조 된 문서 조회 -->
+	<select id="selectReceiveList" parameterType="Document" resultMap="DocumentList">
+		SELECT DOC_NO, DOC_TITLE, DOC_CONTENT, WRITE_DATE, EMP_NAME, APP_STATUS FROM(
+		SELECT D.DOC_NO, DOC_TITLE, DOC_CONTENT, WRITE_DATE, EMP_NAME,
+		(SELECT COUNT(*) FROM APPROVAL_RECORD WHERE APPROVAL_STATUS = 'AP1' AND DOC_NO = D.DOC_NO) AS APP_STATUS,
+		(SELECT COUNT(*) FROM APPROVAL_RECORD WHERE APPROVAL_STATUS = 'AP3' AND DOC_NO = D.DOC_NO) AS AP3COUNT
+		FROM  DOCAPPROVAL D
+		JOIN EMPLOYEE E ON(WRITER = EMP_NO)
+		WHERE DOC_NO = #{docNo})
+		WHERE AP3COUNT = 0
+	</select>
+	
+	<!-- 자신이 결재선에 포함 된 문서 조회 -->
+	<select id="selectGetComDocNo" parameterType="Document" resultType="_int">
+		SELECT DOC_NO 
+		FROM APPROVAL_RECORD 
+		WHERE EMP_NO = #{empNo}
+	</select>
+	
+	<!-- 결재선에 포함되고 완료된 문서 조회  -->
+	<select id="selectCompleteList" parameterType="Document" resultMap="DocumentList">
+		SELECT DOC_NO, DOC_TITLE, DOC_CONTENT, WRITE_DATE, EMP_NAME, APP_STATUS FROM(
+		SELECT D.DOC_NO, DOC_TITLE, DOC_CONTENT, WRITE_DATE, EMP_NAME,
+		(SELECT COUNT(*) FROM APPROVAL_RECORD WHERE APPROVAL_STATUS = 'AP1' AND DOC_NO = D.DOC_NO) AS APP_STATUS,
+		(SELECT COUNT(*) FROM APPROVAL_RECORD WHERE APPROVAL_STATUS = 'AP3' AND DOC_NO = D.DOC_NO) AS AP3COUNT
+		FROM  DOCAPPROVAL D
+		JOIN EMPLOYEE E ON(WRITER = EMP_NO)
+		WHERE DOC_NO = #{docNo})
+		WHERE AP3COUNT = 0
+	</select>
+	
+	<!-- 결재 진행상태 조회 -->
+	<select id="selectAppProgress" parameterType="Document" resultMap="DocumentList">
+		SELECT E.EMP_NAME, APPROVAL_STATUS, TO_CHAR(APPROVAL_DATE, 'YYYY/MM/DD HH24:MI:SS') AS APPROVAL_DATE, APP_REASON 
+		FROM APPROVAL_RECORD AR
+		JOIN EMPLOYEE E ON(AR.EMP_NO=E.EMP_NO)
+		WHERE DOC_NO = #{docNo}
+	</select>
+	
+	<!-- 문서 보기 -->
+	<select id="selectDocDetail" parameterType="InsertSign" resultMap="InsertSignList">
+		SELECT D.DOC_NO, D.DOC_TITLE, D.DOC_CONTENT, A.ORI_FILENAME, A.MODI_FILENAME
+		FROM DOCAPPROVAL D 
+		LEFT JOIN ATTACHMENT A ON(D.DOC_NO = A.DOC_NO) 
+		WHERE D.DOC_NO = #{docNo}
+	</select>
+	
+	<!-- 결재 승인 및 반려-->
+	<update id="updateApprovalStatus" parameterType="Document">
+		UPDATE APPROVAL_RECORD SET
+		APPROVAL_STATUS = #{approvalStatus}, APP_REASON = #{appReason}, APPROVAL_DATE = SYSDATE
+		WHERE DOC_NO = #{docNo}
+		AND EMP_NO = #{empNo}
+	</update>
+	
+	<!-- 회의록 Insert -->
+	<insert id="insertProceeding" parameterType="Proceeding">
+		INSERT INTO PROCEEDING
+		VALUES(PROCEED_NO.NEXTVAL, #{empNo}, #{roomName}, #{roomContent}, SYSDATE, DEFAULT)
+	</insert>
+	
+	<!-- 회의록 Select -->
+	<select id="selectProceeding" parameterType="Proceeding" resultMap="ProceedList">
+		SELECT PROCEED_NO, P.EMP_NO, E.EMP_NAME, ROOM_NAME, ROOM_CONTENT, SAVE_DATE, P.STATUS
+		FROM PROCEEDING P
+		JOIN EMPLOYEE E ON(P.EMP_NO = E.EMP_NO)
+		WHERE P.EMP_NO = #{empNo}
+		AND P.STATUS = 'Y'
+		AND E.STATUS = 'Y'
+	</select>
+	
+	<!-- 회의록 STATUS 변경 -->
+	<update id="deleteProceeding" parameterType="Proceeding">
+		UPDATE PROCEEDING SET
+		STATUS = 'N'
+		WHERE EMP_NO = #{empNo}
+		AND PROCEED_NO = #{proceedNo}
+	</update>
+	
+	<!-- 알람 Insert -->
+	<insert id="insertSignAlarm" parameterType="Alarm">
+	INSERT INTO "FINAL"."ALARM" (ALARM_NO, ALARM_CONTENTS, EMP_NO , STATUS, RECEIVE_DATE) 
+	VALUES (ALARM_NO.NEXTVAL, #{alarmContents}, #{empNo}, 'Y', SYSDATE)
+	</insert>
+	
+	<!-- 다음 결재자 번호 찾아오기 -->
+	<select id="nextApprovalMember" parameterType="_int" resultType="_int">
+		SELECT EMP_NO FROM (
+		SELECT * FROM APPROVAL_RECORD WHERE DOC_NO = #{docNo} AND APPROVAL_STATUS = 'AP1' ORDER BY 1
+		)
+		WHERE ROWNUM = 1
+	</select>
+	
+	<!-- 문서별 수신참조자들 조회 -->
+	<select id="selectReceiverList" parameterType="Document" resultMap="DocumentList">
+		SELECT EMP_NO FROM RECEIVING_CHECK WHERE DOC_NO = #{docNo}
+	</select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
