@@ -9,7 +9,7 @@ import com.kh.dep.depEmergency.model.vo.DepE;
 
 public interface DepEService {
 
-	ArrayList<DepE> selectDepList(int empNo) throws DepESelectListException;
+	ArrayList<DepE> selectDepList(String loginUser) throws DepESelectListException;
 
 	
 }

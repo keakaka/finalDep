@@ -363,22 +363,22 @@ public class PersonController {
 		PromotionIn p = new PromotionIn();
 		int empNo = Integer.parseInt(userNo);
 
-		if(jobCode.equals("대표"))
+		if(jobCode.equals("회장"))
 		{
 			jobCode = "J1";
 			System.out.println(jobCode);
 			p.setJobCode(jobCode);
-		}else if(jobCode.equals("대표이사"))
+		}else if(jobCode.equals("사장"))
 		{
 			jobCode ="J2";
 			System.out.println(jobCode);
 			p.setJobCode(jobCode);
-		}else if(jobCode.equals("이사"))
+		}else if(jobCode.equals("전무"))
 		{
 			jobCode ="J3";
 			System.out.println(jobCode);
 			p.setJobCode(jobCode);
-		}else if(jobCode.equals("팀장"))
+		}else if(jobCode.equals("상무"))
 		{
 			jobCode ="J4";
 			p.setJobCode(jobCode);
@@ -398,9 +398,13 @@ public class PersonController {
 		{
 			jobCode ="J8";
 			p.setJobCode(jobCode);
+		}else if(jobCode.equals("주임"))
+		{
+				jobCode ="J9";
+		p.setJobCode(jobCode);
 		}else if(jobCode.equals("사원"))
 		{
-			jobCode ="J9";
+			jobCode ="J10";
 			p.setJobCode(jobCode);
 		}
 		p.setEmpNo(empNo);

@@ -21,13 +21,12 @@ public class DepEController {
 	@RequestMapping("depESelect.de")
 	public String depESelect(Model model , @RequestParam String loginUser)
 	{
-		int empNo = Integer.parseInt(loginUser);
-		
-		System.out.println("비상연락망 컨트롤 입장 : " + empNo);
+	
+		System.out.println("비상연락망 컨트롤 입장 : " + loginUser);
 		
 		ArrayList<DepE> DepEList;
 		try {
-			DepEList = ds.selectDepList(empNo);
+			DepEList = ds.selectDepList(loginUser);
 			System.out.println("컨트롤 돌아온 리스트 갑 : " + DepEList);
 			model.addAttribute("DepEList" , DepEList);
 			

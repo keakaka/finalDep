@@ -110,7 +110,7 @@ public class FacingController {
 	}
 	
 	@RequestMapping("facingReceiveList.ms")
-	public String selectReceiveList(Model model , @RequestParam(name="loginUser")String loginUser ){
+	public String selectReceiveList(Model model , @RequestParam(name="loginUser")String loginUser){
 		System.out.println("수신자 컨트롤러 입장");
 		
 		System.out.println("회원번호" + loginUser);
@@ -188,132 +188,158 @@ public class FacingController {
 		
 		System.out.println("===========================================");
 		
-		FacingInsert fi = new FacingInsert();
-		FacingInsertR fir = new FacingInsertR();
-		Alram al = new Alram();
 		
-		fi.setFacingTitle(title);
-		fi.setFacingContents(mailContent);
-		fi.setEmpNo(empNo);
+		//System.out.println("들어갔냐"+fi);
+		//여러명일때 여러번 인설트
+		ArrayList<String> list = new ArrayList<String>();
+		StringTokenizer st = new StringTokenizer(receive,",");
+			
+		if(receive.length() > 5 )
+		{
+			FacingInsert fi = new FacingInsert();
 		
-		System.out.println("들어갔냐"+fi);
+			
+			
+			fi.setFacingTitle(title);
+			fi.setFacingContents(mailContent);
+			fi.setEmpNo(empNo);
+			
+			
+			  int tokensize = 0;
+			  tokensize=st.countTokens();
+			  System.out.println("토근 사이즈 값" + tokensize);
+				System.out.println("if문들어감");
+				System.out.println("if문에 들어온 :" +receive);
+				
+				while (st.hasMoreTokens()){
+					list.add(st.nextToken());
+					System.out.println("리스트 에 추가됨");
+				}
+			for(int j = 0; j < list.size(); j++)
+			{
+					
+						int result = 0;
+				
+						 result = fs.insertFacing(fi);
+						System.out.println("인설트완료!!");
+						 System.out.println("돌아온 리절트값" + result);
+				  System.out.println("============================");
+				  
+						
+						System.out.println("담긴리스트:"+list.get(j));
+						
+						System.out.println("=================");
+						System.out.println("찾아보자!");
+						
+						ArrayList<MemberSelect> mlist = ms.selectAllMember();
+						System.out.println("리스트" + mlist);	
+						
+						for(int i1 = 0; i1<mlist.size(); i1++)
+						{	
+							//방금 인설트한 쪽지번호 가져오기 
+							Facing nowFacing = fs.selectNowFacing(empNo);
+							System.out.println("돌아온 최근 쪽지번호 : " + nowFacing.getFacingNo());
+						
+						if(mlist.get(i1).getEmpName().equals(list.get(j)))
+								{	
+									FacingInsertR fir = new FacingInsertR();
+									Alram al = new Alram();
+									System.out.println("----------찾음----------");
+									System.out.println("전체 리스트에서 찾은 사원이름 : " + mlist.get(i1).getEmpName());
+									System.out.println(mlist.get(i1).getEmpNo());
+									int receiveNo = mlist.get(i1).getEmpNo(); //이름 받아오기
+									int nFacingNo = nowFacing.getFacingNo(); //쪽지 번호받아오기
+						
+									fir.setFacingNo(nFacingNo);
+									fir.setReceiver(receiveNo);
+									System.out.println("객체에 들어간 번호: " + fir.getFacingNo() + "번");
+									System.out.println("객체에 들어간 회원번호 : " + fir.getReceiver() + "번");
+						
+									int resultR = fs.insertReceiver(fir);
+									System.out.println("========알람=======");
+									//받는사람,제목 
+									al.setAlramContents(title);
+									al.setEmpNo(receiveNo);
+									int alram = fs.insertAlram(al);
+									
+									System.out.println("======어태치먼트 구역======");
+							     
+
+									for(MultipartFile f : fileList){
+							             
+							             String originFileName = f.getOriginalFilename();
+							             String ext = originFileName.substring(originFileName.lastIndexOf("."));
+							             String changeName = CommonUtils.getRandomString();
+							             
+							          try {
+							                f.transferTo(new File(filePath + "\\" + changeName + ext));
+							                
+							                
+							                
+							                
+							                Attachment file = new Attachment();
+							                
+							                file.setEmailNo(nowFacing.getFacingNo());
+							                file.setEmpNo(empNo);
+							                file.setModiFileName(changeName + ext);
+							                file.setOriFileName(originFileName);
+							                
+							                System.out.println(file);
+							                int resultA = as.insertFacingAttach(file);
+							                if(resultA>0){
+							                System.out.println("어태치 성공");
+							                }
+							          
+							             } catch (Exception e) {
+							             
+							                new File(filePath + "\\" + changeName + ext).delete();
+							                
+							             } 
+							       
+							 
+									 }break;
+									 
+									
+									
+								}
+					
+									
+							
+							
+						}
+					}
+			
+			  
+			
+		}else{
 		
-		int result = fs.insertFacing(fi);
+			FacingInsert fi = new FacingInsert();
+			FacingInsertR fir = new FacingInsertR();
+			Alram al = new Alram();
+			int result = 0;
+			
+			fi.setFacingTitle(title);
+			fi.setFacingContents(mailContent);
+			fi.setEmpNo(empNo);
+			
+		result = fs.insertFacing(fi);
 		
 		System.out.println("쪽지인설트 결과값 :"+result);
+		
+		
+	
 		ArrayList<MemberSelect> mlist = ms.selectAllMember();
-		System.out.println("리스트" + mlist);
+		System.out.println("리스트" + mlist);	
+		//방금 인설트한 쪽지번호 가져오기 
 		Facing nowFacing = fs.selectNowFacing(empNo);
 
 		System.out.println("nowFacing : " + nowFacing);
 
 		System.out.println(nowFacing);
-
+		
 		System.out.println("돌아온 최근 쪽지번호 : " + nowFacing.getFacingNo());
-	
-		
-		//==================수신자 ,알람 인설트==================
-
-		if(result > 0  && receive.length() > 5 )
-		{
-			System.out.println("if문들어감");
-			System.out.println("if문에 들어온 :" +receive);
-			StringTokenizer st = new StringTokenizer(receive,",");
-			ArrayList<String> list = new ArrayList<String>();
-			
-			while (st.hasMoreTokens()){
-				list.add(st.nextToken());
-			}
-
-					for(int ss = 0; ss<list.size(); ss++)
-					{
-						System.out.println("문자열 담긴 리스트:  " + list.get(ss).toString());
-					}
-			for(int j = 0; j < list.size(); j++)
-			{
-				
-				System.out.println("담긴리스트:"+list.get(j));
-				
-				for(int i = 0; i<mlist.size(); i++)
-				{	
-					System.out.println("=================");
-					System.out.println("찾아보자!");
-					System.out.println(mlist.get(i).getEmpName());
-					if(mlist.get(i).getEmpName().equals(list.get(j)))
-							{	
-						
-								System.out.println("----------찾음----------");
-								System.out.println("전체 리스트에서 찾은 사원이름 : " + mlist.get(i).getEmpName());
-								System.out.println(mlist.get(i).getEmpNo());
-								int receiveNo = mlist.get(i).getEmpNo(); //이름 받아오기
-								int nFacingNo = nowFacing.getFacingNo(); //쪽지 번호받아오기
-					
-								fir.setFacingNo(nFacingNo);
-								fir.setReceiver(receiveNo);
-								System.out.println("객체에 들어간 번호: " + fir.getFacingNo() + "번");
-								System.out.println("객체에 들어간 회원번호 : " + fir.getReceiver() + "번");
-					
-								int resultR = fs.insertReceiver(fir);
-								System.out.println("========알람=======");
-								//받는사람,제목 
-								al.setAlramContents(title);
-								al.setEmpNo(receiveNo);
-								int alram = fs.insertAlram(al);
-								
-								
-								/*알람카운트 업데이트 부분(은비)*/
-								int receiverEmpNo = mlist.get(i).getEmpNo();
-								int alarmCount = fs.selectAlarmCount(receiverEmpNo);
-								System.out.println(alarmCount);
-								System.out.println("나의 알람갯수(전) : " + mlist.get(i).getMyAlarmCount());
-							    mlist.get(i).setMyAlarmCount(alarmCount);
-								System.out.println("나의 알람갯수(후) : " + mlist.get(i).getMyAlarmCount());
-								
-								
-								break;
-						
-					}
-				}
-			}
-		}
-						
-			
-			else if(result > 0 && receive.length() < 6 )
-			{
-				
-				for(int i = 0; i<mlist.size(); i++)
-				{	
-					System.out.println("=================");
-					System.out.println("찾아보자!");
-					System.out.println("리시브" + receive);
-					System.out.println(mlist.get(i).getEmpName());
-				if(mlist.get(i).getEmpName().equals(receive))
-				{	
-					System.out.println("=========찾음==========");
-					System.out.println("리스트에서 찾은 사원이름" + mlist.get(i).getEmpName());
-					System.out.println(mlist.get(i).getEmpNo());
-					int receiveNo = mlist.get(i).getEmpNo();
-					int nFacingNo = nowFacing.getFacingNo();
-				
-					fir.setFacingNo(nFacingNo);
-					fir.setReceiver(receiveNo);
-					System.out.println("객체에 들어간 쪽지번호 : " + fir.getFacingNo());
-					System.out.println("객체에 들어간 수신자번호 : " + fir.getReceiver());
-				
-					int resultR = fs.insertReceiver(fir);
-					System.out.println("=========알람==========");
-					al.setAlramContents(title);
-					al.setEmpNo(receiveNo);
-					int alram = fs.insertAlram(al);
-					break;
-				
-			}
-				
-		}
-		}
 		
 		
-		//==================어태치 먼트 =========================
 		System.out.println("======어태치먼트 구역======");
 
 		for(MultipartFile f : fileList){
@@ -324,6 +350,8 @@ public class FacingController {
              
           try {
                 f.transferTo(new File(filePath + "\\" + changeName + ext));
+                
+                
                 
                 
                 Attachment file = new Attachment();
@@ -346,10 +374,39 @@ public class FacingController {
              }  
  
 		 }
+	
+		for(int i = 0; i<mlist.size(); i++)
+		{	
+			System.out.println("=================");
+			System.out.println("찾아보자!");
+			System.out.println("리시브" + receive);
+			System.out.println(mlist.get(i).getEmpName());
+		if(mlist.get(i).getEmpName().equals(receive))
+		{	
+			System.out.println("=========찾음==========");
+			System.out.println("리스트에서 찾은 사원이름" + mlist.get(i).getEmpName());
+			System.out.println(mlist.get(i).getEmpNo());
+			int receiveNo = mlist.get(i).getEmpNo();
+			int nFacingNo = nowFacing.getFacingNo();
 		
+			fir.setFacingNo(nFacingNo);
+			fir.setReceiver(receiveNo);
+			System.out.println("객체에 들어간 쪽지번호 : " + fir.getFacingNo());
+			System.out.println("객체에 들어간 수신자번호 : " + fir.getReceiver());
 		
+			int resultR = fs.insertReceiver(fir);
+			System.out.println("=========알람==========");
+			al.setAlramContents(title);
+			al.setEmpNo(receiveNo);
+			int alram = fs.insertAlram(al);
+			break;
 		
+	}
 		
+}
+		}
+		
+	
 	
 
 		return "facing/facingTest";
@@ -384,24 +441,25 @@ public class FacingController {
 	}
 	
 	@RequestMapping(value="updateFacing.ms")
-	public void updateFacing(Model model , @RequestParam String facingNo ,@RequestParam String userNo, HttpServletResponse response)
+	public void updateFacing(Model model , @RequestParam String facingNo , HttpServletResponse response)
 	{
 		
 		System.out.println("쪽지 업데이트 입장");
 		
 		
 		int fNo = Integer.parseInt(facingNo);
-		int fus = Integer.parseInt(userNo);
+	
 		
 		
 		System.out.println("쪽지번호 : " + fNo);
-		System.out.println("사원번호 : " + fus);
+	
 		
 		
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			
-			ArrayList<Facing> result = fs.updateFacing(fNo ,fus);
+			
+			int result = fs.updateFacing(fNo);
 			System.out.println("돌아온 리스트값" + result);
 			response.getWriter().print(mapper.writeValueAsString(result));
 			

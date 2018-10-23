@@ -12,10 +12,10 @@ import com.kh.dep.facing.model.exception.FacingSelectListException;
 public class DepEDaoImpl implements DepEDao {
 
 	@Override
-	public ArrayList selectDepeList(SqlSessionTemplate sqlSession , int empNo) throws DepESelectListException {
+	public ArrayList selectDepeList(SqlSessionTemplate sqlSession , String depName) throws DepESelectListException {
 		// TODO Auto-generated method stub
-		System.out.println("비상연락망 다오 입장 : " + empNo);
-		ArrayList DepEList = (ArrayList) sqlSession.selectList("DepE.selectDepeList", empNo);
+		System.out.println("비상연락망 다오 입장 : " + depName);
+		ArrayList DepEList = (ArrayList) sqlSession.selectList("DepE.selectDepeList", depName);
 		System.out.println("비상연랑망 다오 돌아온 리스트값 : " + DepEList);
 		if(DepEList == null )
 		{

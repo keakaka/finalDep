@@ -10,7 +10,7 @@ import com.kh.dep.depEmergency.model.exception.DepESelectListException;
 
 public interface DepEDao {
 
-	ArrayList selectDepeList(SqlSessionTemplate sqlSession,int empNo) throws DepESelectListException;
+	ArrayList selectDepeList(SqlSessionTemplate sqlSession,String empNo) throws DepESelectListException;
 
 
 
