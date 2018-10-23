@@ -73,11 +73,7 @@
 							
 			<div class="col-md-12 col-sm-12 col-xs-12">
               <div class="x_panel">
-                <div class="x_title">
-                  <h2><i class="fa fa-bars"></i> Tabs <small>Float right</small></h2>
          
-                  <div class="clearfix"></div>
-                </div>
                 <div class="x_content">
 
                   <div class="" role="tabpanel" data-example-id="togglable-tabs">
@@ -99,7 +95,7 @@
                      <div class="col-md-18 col-sm-18 col-xs-18">
               <div class="x_panel">
                 <div class="x_title">
-                  <h2>보낸쪽지함 <small>Users</small></h2>
+                  <h2>보낸쪽지함 <small>${loginUser.empName }</small></h2>
                   <ul class="nav navbar-right panel_toolbox">
                     <li><a href="#"><i class="fa fa-chevron-up"></i></a>
                     </li>

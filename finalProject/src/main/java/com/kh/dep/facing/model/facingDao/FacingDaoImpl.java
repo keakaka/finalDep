@@ -149,6 +149,15 @@ public class FacingDaoImpl implements FacingDao {
 		return qrList;
 	}
 
+	@Override
+	public int selectAlarmCount(SqlSessionTemplate sqlSession, int receiverEmpNo) {
+		int alarmCount = sqlSession.selectOne("Facing.selectAlarmCount", receiverEmpNo);
+		System.out.println("alarmCount(dao) : " + alarmCount);
+		return alarmCount;
+	}
+
+	
+
 	
 
 /*	@Override

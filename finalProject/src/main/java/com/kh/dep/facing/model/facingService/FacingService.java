@@ -36,6 +36,8 @@ public interface FacingService {
 	int insertAlram(Alram al);
 
 	ArrayList<WorkingQr> selectWorking(int empNo);
+
+	int selectAlarmCount(int receiverEmpNo);
 	
 
 /*	Facing selectInsertFaicng(int empNo);

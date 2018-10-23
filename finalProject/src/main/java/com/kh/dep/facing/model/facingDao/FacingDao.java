@@ -40,6 +40,8 @@ public interface FacingDao {
 
 	ArrayList<WorkingQr> selectWorking(SqlSessionTemplate sqlSession,int empNo);
 
+	int selectAlarmCount(SqlSessionTemplate sqlSession, int receiverEmpNo);
+
 
 	
 
