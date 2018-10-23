@@ -124,7 +124,11 @@
 		DELETE FROM ADDRESSBOOK
 		WHERE EMP_NO = #{empNo} AND LOGIN_NO = #{loginNo}
 	</delete>
-	
+	<select id="selectAddList2" resultMap="AddressBook" parameterType="int">
+	SELECT EMP_NAME, JOB_NAME, POSITION_NAME, PHONE, EMAIL, EMP_NO, DEP_NAME, LOGIN_NO
+	FROM ADDRESSBOOK
+	WHERE LOGIN_NO = #{loginNo} ORDER BY ADDRESSBOOK_ID
+	</select>
 
 
 </mapper>

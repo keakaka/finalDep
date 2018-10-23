@@ -52,6 +52,11 @@ public class AddressBookDaoImpl implements AddressBookDao{
 		return sqlSession.delete("AddressBook.deleteAdd", ab);
 	}
 
+	@Override
+	public List<AddressBook> selectAddList2(AddressBook ab) {
+		return sqlSession.selectList("AddressBook.selectAddList2",ab);
+	}
+
 	
 
 

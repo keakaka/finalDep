@@ -52,6 +52,11 @@ public class AddressBookServiceImpl implements AddressBookService{
 		return ab3;
 	}
 
+	@Override
+	public List<AddressBook> selectAddList2(AddressBook ab) {
+		return abd.selectAddList2(ab);
+	}
+
 	
 
 
