@@ -6,7 +6,6 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.kh.dep.member.model.vo.Alarm;
 import com.kh.dep.sign.model.dao.SignDao;
 import com.kh.dep.sign.model.exception.InsertSignException;
 import com.kh.dep.sign.model.exception.SelectDocException;
@@ -37,34 +36,25 @@ public class SignServiceImpl implements SignService{
 		int result2 = 0;
 		int result3 = 0;
 		int result4 = 0;
-		int result5 = 0;
 		int result1 = sd.insertDocApproval(sqlSession, is);
 		
 		int getDocNo = sd.selectGetDocNoSeq(sqlSession);
 		is.setDocNo(getDocNo);
 		
 		for(int i = 0; i < is.getAppList().length; i++){
-			
 			is.setEmpNo(is.getAppList()[i]);
 			result2 = sd.insertApproval_record(sqlSession, is);
 			
 		}
-		
-		Alarm al = new Alarm();
-		al.setEmpNo(is.getAppList()[0]);
-		al.setAlarmContents("새로운 문서 결재가 있습니다.");
-		System.out.println("al empNo : " + al.getEmpNo());
-		System.out.println("app 0 : " + is.getAppList()[0]);
-		result5 = sd.insertSignAlarm(sqlSession, al);
 		
 		for(int i = 0; i < is.getRecList().length; i++){
 			is.setEmpNo(is.getRecList()[i]);
 			result3 = sd.insertReceiving_Check(sqlSession, is);
 		}
 		
-		result4 = sd.insertAttachment(sqlSession, is);
+			result4 = sd.insertAttachment(sqlSession, is);
 		
-		if(result1 > 0 && result2 > 0 && result3 > 0 && result4 > 0 && result5 > 0){
+		if(result1 > 0 && result2 > 0 && result3 > 0 && result4 > 0){
 			result = 1;
 			return result;
 		}else{
@@ -74,20 +64,12 @@ public class SignServiceImpl implements SignService{
 			int result = 0;
 			int result2 = 0;
 			int result3 = 0;
-			int result4 = 0;
-			int result5 = 0;
 			int result1 = sd.insertDocApproval(sqlSession, is);
 			
 			int getDocNo = sd.selectGetDocNoSeq(sqlSession);
 			is.setDocNo(getDocNo);
 			
 			for(int i = 0; i < is.getAppList().length; i++){
-				if(i == 0){
-					Alarm al = new Alarm();
-					al.setEmpNo(is.getAppList()[i]);
-					al.setAlarmContents("새로운 문서 결재가 있습니다.");
-					result5 = sd.insertSignAlarm(sqlSession, al);
-				}
 				is.setEmpNo(is.getAppList()[i]);
 				result2 = sd.insertApproval_record(sqlSession, is);
 				
@@ -186,50 +168,8 @@ public class SignServiceImpl implements SignService{
 
 	@Override
 	public int updateApprovalStatus(Document d) {
-		int result = 0;
-		int result1 = 0;
-		int result2 = 0;
-		if(d.getApprovalStatus() != "AP3"){
-			result1 = sd.updateApprovalStatus(sqlSession, d);
-			int appNo = sd.nextApprovalMember(sqlSession, d.getDocNo());
-			System.out.println("appNo : " + appNo);
-			if(appNo > 0){
-				Alarm al = new Alarm();
-				al.setAlarmContents("새로운 결재문서가 있습니다.");
-				al.setEmpNo(appNo);
-				result2 = sd.insertSignAlarm(sqlSession, al);
-				
-				if(result1 > 0 && result2 > 0){
-					result = 1;
-				}else{
-					result = 0;
-				}
-			}else{
-				ArrayList<Document> list = sd.selectReceiverList(sqlSession, d.getDocNo());
-				for(int i = 0; i < list.size(); i++){
-					Alarm al = new Alarm();
-					al.setAlarmContents("새로운 결재문서가 있습니다.");
-					al.setEmpNo(list.get(i).getEmpNo());
-					result1 = sd.insertSignAlarm(sqlSession, al);
-					if(result1 <= 0){
-						break;
-					}
-				}
-				if(result1 > 0){
-					result = 1;
-				}else{
-					result = 0;
-				}
-			}
-		}else{
-			result1 = sd.updateApprovalStatus(sqlSession, d);
-			if(result1 > 0){
-				result = 1;
-			}else{
-				result = 0;
-			}
-		}
-		return result;
+		
+		return sd.updateApprovalStatus(sqlSession, d);
 	}
 
 	@Override

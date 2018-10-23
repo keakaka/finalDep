@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.kh.dep.member.model.vo.Alarm;
 import com.kh.dep.sign.model.exception.SelectDocException;
 import com.kh.dep.sign.model.vo.Document;
 import com.kh.dep.sign.model.vo.InsertSign;
@@ -121,23 +120,6 @@ public class SignDaoImpl implements SignDao{
 	@Override
 	public int deleteProceeding(SqlSessionTemplate sqlSession, Proceeding p) {
 		return sqlSession.update("sign.deleteProceeding", p);
-	}
-
-	@Override
-	public int insertSignAlarm(SqlSessionTemplate sqlSession, Alarm al) {
-		
-		return sqlSession.insert("sign.insertSignAlarm", al);
-	}
-
-	@Override
-	public int nextApprovalMember(SqlSessionTemplate sqlSession, int docNo) {
-		
-		return sqlSession.selectOne("sign.nextApprovalMember", docNo);
-	}
-
-	@Override
-	public ArrayList<Document> selectReceiverList(SqlSessionTemplate sqlSession, int docNo) {
-		return (ArrayList)sqlSession.selectList("sign.selectReceiverList", docNo);
 	}
 
 

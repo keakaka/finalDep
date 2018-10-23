@@ -66,9 +66,8 @@
 										<script>
 										function searchName(){
 											var searchN = document.getElementById('searchN').value 
-											var searchNameTR = $('.searchNameTR');
 											console.log(searchN);
-											searchNameTR.html('');
+											
 											$.ajax({
 												url:"searchAddressBookName.ad",
 												type:'post',
@@ -123,7 +122,7 @@
 													</tr>
 												</thead>
 												
-												<tbody class="searchNameTR">
+												<tbody>
 													<c:forEach var="list" items="${addressBookList}" varStatus = 'status'>
 														<tr class="even pointer" id="tableBody">
 															<td class="a-center" style="width:85px;" align="center">
@@ -151,76 +150,46 @@
 							<script>
 							function checkboxArr(empNo){
 								console.log("주소록 추가하기 버튼");
-								var insertAddressBook = $('.insertAddressBook');
+								
 								var empNo = empNo;
 								var loginNo = $("#loginNo").val();
-								console.log('eno : ' + empNo);
-								console.log('loginNo : ' + loginNo);
-								var insertcheck = true;
-								var myselfCheck
-								var empArr = new Array();
-								$('.insertAddressBook tr').each(function() {
-					        	    empArr.push($(this).find(".empClass").val());
-					        	});
+								console.log(empNo);
+								console.log(loginNo);
 								
-								for(var i = 0; i < empArr.length; i++){
-									if(empNo == empArr[i]){
-										insertCheck = false;
-									}else if(empNo == loginNo){
-										myselfCheck = false;
-									}else{
-										check = true;
-									}
-								}
-								if(myselfCheck == false){
-									alert('자기 자신은 추가할 수 없습니다.');
-								}
-								if(insertCheck == false){
-									alert('이미 추가된 사원입니다.');
-								}
-								
-									if(myselfCheck == true && insertCheck == true){
-										$.ajax({
-											url:"insertAddressBook.ad",
-											type:'post',
-											data:{empNo:empNo,
-												  loginNo:loginNo},
-											success:function(data){
-												var list = data.ab2;
-												
-												var empName = "'";
-												
-												empName += list.empName;
-												empName += "'";
-					                            
-					                            var str = '<tr class="even pointer">';
-					                            
-					                            	str += '<input type="hidden" class="empClass" id="empNo2" name="empNo2" value="' + list.empNo + '">'
-														+ '<input type="hidden" id="loginNo2" name="loginNo2" value="' + ${loginUser.empNo} + '">'
-					                            		+ '<td></td><td>' + list.depName + '</td><td>' + list.empName + '</td><td width="190">'
-					                            	    + list.jobName + '</td><td>' + list.positionName + '</td><td>'
-					                            	    + list.phone + '</td><td>' + list.email 
-					                            	    + '</td><td><a data-toggle="modal" data-target="#viewModal" onclick="modal_view(' + empName + ')"><i class="fa fa-envelope fa-lg"></i></a>'
-					                            	    + '</td><td><a onclick="deleteAdd(' + list.empNo +');"><i class="fa fa-trash fa-lg"></i></a></td>'
-					                            	    str += '</tr>';
-					                            	    
-					                            $("#addressBookTable22 tbody").append(str);
-												
-												
-												
-											},
-											error:function(data){
-												console.log("error");
-											},
-											
-										});
-									}
+								$.ajax({
+									url:"insertAddressBook.ad",
+									type:'post',
+									data:{empNo:empNo,
+										  loginNo:loginNo},
+									success:function(data){
+										var list = data.ab2;
 										
-								
+										var empName = "'";
+										
+										empName += list.empName;
+										empName += "'";
+			                            
+			                            var str = '<tr class="even pointer">';
+			                            
+			                            	str += '<input type="hidden" id="empNo2" name="empNo2" value="' + list.empNo + '">'
+												+ '<input type="hidden" id="loginNo2" name="loginNo2" value="' + ${loginUser.empNo} + '">'
+			                            		+ '<td></td><td>' + list.depName + '</td><td>' + list.empName + '</td><td width="190">'
+			                            	    + list.jobName + '</td><td>' + list.positionName + '</td><td>'
+			                            	    + list.phone + '</td><td>' + list.email 
+			                            	    + '</td><td><a data-toggle="modal" data-target="#viewModal" onclick="modal_view(' + empName + ')"><i class="fa fa-envelope fa-lg"></i></a>'
+			                            	    + '</td><td><a onclick="deleteAdd(' + list.empNo +');"><i class="fa fa-trash fa-lg"></i></a></td>'
+			                            	    str += '</tr>';
+			                            	    
+			                            $("#addressBookTable22 tbody").append(str);
+										
+										
+										
+									},
+									error:function(data){
+										console.log("error");
+									},
 									
-								
-								
-								
+								});
 								
 							}
 							</script>
@@ -247,11 +216,11 @@
 														<th></th>
 													</tr>
 												</thead>
-												<tbody class="insertAddressBook">
+												<tbody>
 													<c:forEach var="list" items="${list}" varStatus = 'status'>
 													<c:if test="${list.loginNo == sessionScope.loginUser.empNo }">
 														<tr class="even pointer">
-															<input type="hidden" class="empClass" id="empNo2" name="empNo2" value="${list.empNo}">
+															<input type="hidden" id="empNo2" name="empNo2" value="${list.empNo}">
 															<input type="hidden" id="loginNo2" name="loginNo2" value="${loginUser.empNo}">
 															<td class="a-center" style="width:85px;"></td>
 															<td width="254">${list.depName}</td>

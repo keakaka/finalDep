@@ -121,13 +121,13 @@
 		<result property="attendTime" column="ATTENDTIME" />
 		<result property="leaveTime" column="LEAVETIME" />
 	</resultMap>
-	
+
 	<resultMap type="SalaryExcel" id="salaryRecordResultSet">
 		<result property="depName" column="DEP_NAME" />
 		<result property="jobName" column="JOB_NAME" />
 		<result property="empName" column="EMP_NAME" />
 		<result property="incomeDate" column="INCOME_DATE" />
-		<result property="basePay" column="BASE_PAY"/>
+		<result property="basePay" column="BASE_PAY" />
 		<result property="regularBonus" column="REGULAR_BONUS" />
 		<result property="taxFreeAlw" column="TAX_FREE_ALW" />
 		<result property="nationalPension" column="NATIONAL_PENSION" />
@@ -135,7 +135,7 @@
 		<result property="longtermcareIns" column="LONGTERMCARE_INS" />
 		<result property="employeeIns" column="EMPLOYEE_INS" />
 	</resultMap>
-	
+
 	<resultMap type="Alarm" id="myAlarmResultSet">
 		<id property="alarmNo" column="ALARM_NO" />
 		<result property="alarmContents" column="ALARM_CONTENTS" />
@@ -235,7 +235,8 @@
 		FROM EMPLOYEE
 		WHERE STATUS = 'Y'
 		AND EMP_ID IS NOT NULL
-		AND EMP_PWD IS NOT NULL
+		AND EMP_PWD IS
+		NOT NULL
 	</select>
 
 	<!-- 회원가입용 메소드 -->
@@ -249,12 +250,13 @@
 		#{address}, #{salary}, SYSDATE, #{phoneReveal}, DEFAULT)
 
 	</insert>
-	
+
 	<!-- 회원가입시 Id,Pw생성 -->
-		<update id="insertIdPwMember" parameterType="MemberSelect">
-		UPDATE EMPLOYEE SET EMP_ID = #{empNo}, EMP_PWD=#{empPwd}
+	<update id="insertIdPwMember" parameterType="MemberSelect">
+		UPDATE EMPLOYEE SET
+		EMP_ID = #{empNo}, EMP_PWD=#{empPwd}
 		WHERE EMP_NO = #{empNo}
-		</update>
+	</update>
 
 	<!-- 사진입력시 멤버 번호 조회 -->
 	<select id="selectempNumber" resultType="_int">
@@ -318,6 +320,62 @@
 		VALUES (DEP_RECORD_NO.NEXTVAL, SYSDATE, #{depReason}, #{empNo},
 		#{depId})
 	</insert>
+
+	
+	<select id="selectCheckMember" parameterType="MemberSelect" resultType="_int">
+		SELECT COUNT(*)
+		FROM (SELECT ROWNUM, EMP_NO, EMP_ID, EMP_PWD, EMP_NAME,
+		DEP_NAME, JOB_NAME,
+		BIRTH_DATE, EMAIL, PHONE, EMERGENCY_PHONE, ADDRESS,
+		SALARY, HIRE_DATE,
+		LEAVE_DATE, PHONE_REVEAL, STATUS, JOB_CODE, DEP_ID,
+		MODI_FILENAME,
+		EMP_TYPE, POSITION_NO, POSITION_NAME
+		FROM (SELECT
+		E.EMP_NO, E.EMP_ID,
+		E.EMP_PWD,
+		E.EMP_NAME,D.DEP_NAME,
+		J.JOB_NAME,
+		E.BIRTH_DATE, E.EMAIL,
+		E.PHONE,
+		E.EMERGENCY_PHONE,
+		E.ADDRESS,
+		E.SALARY,
+		E.HIRE_DATE,
+		E.LEAVE_DATE,
+		E.PHONE_REVEAL, E.STATUS, J.JOB_CODE,
+		D.DEP_ID,
+		A.MODI_FILENAME, A.EMP_TYPE, PR.POSITION_NO, P.POSITION_NAME
+		FROM
+		EMPLOYEE E
+		JOIN DEPT_RECORD DR ON(E.EMP_NO = DR.EMP_NO)
+		JOIN
+		DEPARTMENT D
+		ON(D.DEP_ID = DR.DEP_ID)
+		JOIN JOB_RECORD JR ON(E.EMP_NO =
+		JR.EMP_NO)
+		JOIN JOB J ON (J.JOB_CODE = JR.JOB_CODE)
+		JOIN ATTACHMENT A
+		ON(A.EMP_NO =
+		E.EMP_NO)
+		JOIN POSITION_RECORD PR ON(PR.EMP_NO =
+		E.EMP_NO)
+		JOIN POSITION
+		P ON(P.POSITION_NO = PR.POSITION_NO)
+		WHERE
+		E.EMP_ID= #{empNo}
+		AND E.EMP_NAME = #{empName}
+		AND DR.DEP_ID = #{depId}
+		AND JR.JOB_CODE = #{jobCode}
+		AND
+		E.STATUS='Y'
+		AND A.EMP_TYPE='ET1'
+		ORDER BY
+		DR.DEP_RECORD_DATE DESC,
+		JR.JOB_RECORD_DATE DESC,
+		PR.POSITION_RECORD_DATE DESC)
+		WHERE ROWNUM = 1)
+	</select>
 
 
 
@@ -395,7 +453,8 @@
 		TO_CHAR(VAC_STARTDATE, 'YYYY-MM-DD') VAC_STARTDATE,
 		TO_CHAR(VAC_ENDDATE, 'YYYY-MM-DD') VAC_ENDDATE
 		FROM VACATION
-		WHERE EMP_NO=#{empNo}
+		WHERE
+		EMP_NO=#{empNo}
 		ORDER BY VAC_STARTDATE DESC
 	</select>
 
@@ -425,101 +484,117 @@
 		UPLOAD_DATE=SYSDATE
 		WHERE EMP_NO=${list.get(0)}
 	</update>
-	
-	<!-- <insert id="insertSalaryExcel" parameterType="SalaryExcel">
-		INSERT INTO SALARY(EMP_NO, BASE_PAY, REGULAR_BONUS, INCOME_DATE)
-		<foreach collection="list" item="item" separator=",">
-		VALUES	(#{item.empName},#{item.basePay},#{item.regularBonus},#{item.incomeDate})
-		</foreach>
-	</insert> -->
-	
+
+	<!-- <insert id="insertSalaryExcel" parameterType="SalaryExcel"> INSERT 
+		INTO SALARY(EMP_NO, BASE_PAY, REGULAR_BONUS, INCOME_DATE) <foreach collection="list" 
+		item="item" separator=","> VALUES (#{item.empName},#{item.basePay},#{item.regularBonus},#{item.incomeDate}) 
+		</foreach> </insert> -->
+
 	<insert id="insertSalaryExcel" parameterType="SalaryExcel">
-		INSERT INTO SALARY(SALARY_NO, EMP_NO, BASE_PAY, REGULAR_BONUS, TAX_FREE_ALW, NATIONAL_PENSION, HEALTH_INS, EMPLOYEE_INS, LONGTERMCARE_INS, INCOME_DATE)
-		VALUES (SALARY_NO.NEXTVAL, (SELECT EMP_NO FROM EMPLOYEE WHERE EMP_NAME LIKE #{empName} ),#{basePay},#{regularBonus},#{taxFreeAlw},#{nationalPension},#{healthIns},#{employeeIns},#{longtermcareIns},#{incomeDate})
+		INSERT INTO
+		SALARY(SALARY_NO, EMP_NO, BASE_PAY, REGULAR_BONUS, TAX_FREE_ALW,
+		NATIONAL_PENSION, HEALTH_INS, EMPLOYEE_INS, LONGTERMCARE_INS,
+		INCOME_DATE)
+		VALUES (SALARY_NO.NEXTVAL, (SELECT EMP_NO FROM EMPLOYEE
+		WHERE EMP_NAME LIKE #{empName}
+		),#{basePay},#{regularBonus},#{taxFreeAlw},#{nationalPension},#{healthIns},#{employeeIns},#{longtermcareIns},#{incomeDate})
 	</insert>
-	
+
 	<select id="selectSalaryList" resultMap="salaryRecordResultSet">
-		SELECT D.DEP_NAME, J.JOB_NAME, E.EMP_NAME, S.BASE_PAY, S.INCOME_DATE, S.REGULAR_BONUS, S.TAX_FREE_ALW, S.NATIONAL_PENSION, S.HEALTH_INS, S.LONGTERMCARE_INS, S.EMPLOYEE_INS 
-      FROM SALARY S
-      JOIN EMPLOYEE E ON(E.EMP_NO = S.EMP_NO)
-      JOIN DEPT_RECORD DR ON(S.EMP_NO = DR.EMP_NO)
-      JOIN DEPARTMENT D ON(DR.DEP_ID = D.DEP_ID)
-      JOIN JOB_RECORD JR ON(S.EMP_NO = JR.EMP_NO)
-      JOIN JOB J ON(J.JOB_CODE = JR.JOB_CODE)
-      WHERE DEP_RECORD_DATE = (SELECT MAX(DEP_RECORD_DATE) 
-                               FROM DEPT_RECORD R 
-                               WHERE R.EMP_NO = S.EMP_NO)
-      AND JOB_RECORD_DATE = (SELECT MAX(JOB_RECORD_DATE) 
-                                FROM JOB_RECORD R 
-                                WHERE R.EMP_NO = S.EMP_NO)
-      AND D.STATUS = 'Y'
+		SELECT D.DEP_NAME,
+		J.JOB_NAME, E.EMP_NAME, S.BASE_PAY, S.INCOME_DATE, S.REGULAR_BONUS,
+		S.TAX_FREE_ALW, S.NATIONAL_PENSION, S.HEALTH_INS, S.LONGTERMCARE_INS,
+		S.EMPLOYEE_INS
+		FROM SALARY S
+		JOIN EMPLOYEE E ON(E.EMP_NO = S.EMP_NO)
+		JOIN DEPT_RECORD DR ON(S.EMP_NO = DR.EMP_NO)
+		JOIN DEPARTMENT D ON(DR.DEP_ID = D.DEP_ID)
+		JOIN JOB_RECORD JR ON(S.EMP_NO = JR.EMP_NO)
+		JOIN JOB J ON(J.JOB_CODE = JR.JOB_CODE)
+		WHERE DEP_RECORD_DATE = (SELECT MAX(DEP_RECORD_DATE)
+		FROM DEPT_RECORD R
+		WHERE R.EMP_NO = S.EMP_NO)
+		AND JOB_RECORD_DATE = (SELECT MAX(JOB_RECORD_DATE)
+		FROM JOB_RECORD R
+		WHERE R.EMP_NO = S.EMP_NO)
+		AND D.STATUS = 'Y'
 	</select>
-	
+
 	<delete id="deleteAllEmpSalaryData">
 		DELETE FROM SALARY
 	</delete>
-	
+
 	<select id="selectSalaryCount" resultType="_int">
 		SELECT COUNT(*)
-		FROM SALARY
+		FROM
+		SALARY
 	</select>
-	
-	<select id="selectSearchCondition" resultMap="salaryRecordResultSet" parameterType="java.util.ArrayList">
-		SELECT D.DEP_NAME, J.JOB_NAME, E.EMP_NAME, S.INCOME_DATE, S.BASE_PAY, S.REGULAR_BONUS, S.TAX_FREE_ALW, S.NATIONAL_PENSION, S.HEALTH_INS, S.LONGTERMCARE_INS, S.EMPLOYEE_INS
-      FROM SALARY S
-      JOIN EMPLOYEE E ON(E.EMP_NO=S.EMP_NO)
-      JOIN JOB_RECORD JR ON(JR.EMP_NO=S.EMP_NO)
-      JOIN JOB J ON(J.JOB_CODE=JR.JOB_CODE)
-      JOIN DEPT_RECORD DR ON(DR.EMP_NO=S.EMP_NO)
-      JOIN DEPARTMENT D ON(D.DEP_ID=DR.DEP_ID)
-      WHERE DEP_RECORD_DATE = (SELECT MAX(DEP_RECORD_DATE) 
-                                 FROM DEPT_RECORD R 
-                                WHERE R.EMP_NO = S.EMP_NO)
-      AND JOB_RECORD_DATE = (SELECT MAX(JOB_RECORD_DATE) 
-                                FROM JOB_RECORD R 
-                               WHERE R.EMP_NO = S.EMP_NO)
-      AND D.STATUS = 'Y'
-      AND D.DEP_ID = ${list.get(0)}
-      AND J.JOB_CODE = ${list.get(1)}
-      AND S.INCOME_DATE LIKE ${list.get(2)}
-      AND E.EMP_NAME LIKE ${list.get(3)}
+
+	<select id="selectSearchCondition" resultMap="salaryRecordResultSet"
+		parameterType="java.util.ArrayList">
+		SELECT D.DEP_NAME, J.JOB_NAME, E.EMP_NAME,
+		S.INCOME_DATE, S.BASE_PAY, S.REGULAR_BONUS, S.TAX_FREE_ALW,
+		S.NATIONAL_PENSION, S.HEALTH_INS, S.LONGTERMCARE_INS, S.EMPLOYEE_INS
+		FROM SALARY S
+		JOIN EMPLOYEE E ON(E.EMP_NO=S.EMP_NO)
+		JOIN JOB_RECORD JR ON(JR.EMP_NO=S.EMP_NO)
+		JOIN JOB J ON(J.JOB_CODE=JR.JOB_CODE)
+		JOIN DEPT_RECORD DR ON(DR.EMP_NO=S.EMP_NO)
+		JOIN DEPARTMENT D ON(D.DEP_ID=DR.DEP_ID)
+		WHERE DEP_RECORD_DATE = (SELECT MAX(DEP_RECORD_DATE)
+		FROM DEPT_RECORD R
+		WHERE R.EMP_NO = S.EMP_NO)
+		AND JOB_RECORD_DATE = (SELECT MAX(JOB_RECORD_DATE)
+		FROM JOB_RECORD R
+		WHERE R.EMP_NO = S.EMP_NO)
+		AND D.STATUS = 'Y'
+		AND D.DEP_ID = ${list.get(0)}
+		AND J.JOB_CODE = ${list.get(1)}
+		AND S.INCOME_DATE LIKE ${list.get(2)}
+		AND E.EMP_NAME LIKE ${list.get(3)}
 	</select>
-	
+
 	<select id="selectMyAlarmList" parameterType="_int" resultMap="myAlarmResultSet">
 		SELECT ALARM_NO, ALARM_CONTENTS, EMP_NO, EMP_NAME
 		FROM ALARM A
-		JOIN EMPLOYEE USING(EMP_NO)
+		JOIN
+		EMPLOYEE USING(EMP_NO)
 		WHERE EMP_NO = #{empNo}
 		AND A.STATUS = 'Y'
 	</select>
-	
+
 	<select id="selectMyAlarmCount" parameterType="_int" resultType="_int">
 		SELECT COUNT(*)
 		FROM ALARM
 		WHERE EMP_NO=#{empNo}
 		AND STATUS='Y'
 	</select>
-	
+
 	<update id="updateMyAlarm" parameterType="_int">
 		UPDATE ALARM
-		SET STATUS='N'
+		SET
+		STATUS='N'
 		WHERE ALARM_NO=#{alarmNo}
 	</update>
 
 	<insert id="insertFacingAttach" parameterType="Attachment">
 		INSERT INTO
-		ATTACHMENT(FILE_NO, ORI_FILENAME, MODI_FILENAME, UPLOAD_DATE,EMAIL_NO, EMP_NO,
+		ATTACHMENT(FILE_NO, ORI_FILENAME, MODI_FILENAME, UPLOAD_DATE,EMAIL_NO,
+		EMP_NO,
 		EMP_TYPE)
-		VALUES(FILE_NO.NEXTVAL, #{oriFileName}, #{modiFileName},
+		VALUES(FILE_NO.NEXTVAL, #{oriFileName},
+		#{modiFileName},
 		SYSDATE,#{emailNo},#{empNo},'ET1')
 	</insert>
 
-	<select id="selectMySalaryRecord" parameterType="_int" resultMap="salaryRecordResultSet">
-		SELECT INCOME_DATE, BASE_PAY, REGULAR_BONUS, TAX_FREE_ALW, NATIONAL_PENSION, HEALTH_INS, LONGTERMCARE_INS, EMPLOYEE_INS 
+	<select id="selectMySalaryRecord" parameterType="_int"
+		resultMap="salaryRecordResultSet">
+		SELECT INCOME_DATE, BASE_PAY, REGULAR_BONUS, TAX_FREE_ALW,
+		NATIONAL_PENSION, HEALTH_INS, LONGTERMCARE_INS, EMPLOYEE_INS
 		FROM SALARY
 		WHERE EMP_NO=#{empNo}
 	</select>
-	
+
 </mapper>
 
 

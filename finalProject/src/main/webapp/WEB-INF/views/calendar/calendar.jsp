@@ -949,6 +949,65 @@ $(window).load(function() {
     });
   </script>
   
+  <script>
+									
+									
+									
+									
+									//modal창 안에 dropdown
+									$('#dropdown2').on('click', function() {
+									    /* depNo2 = $(this).attr('value'); */
+									    depNo = $("#dropdown22 option:selected").val();
+									    
+									    console.log("dep2 : " + depNo);
+									    
+									    title = 'test';
+									    
+									    
+									    $.ajax({
+											url:"calendarList.ca",
+											type:'post',
+											data:{title:title,
+												  depNo:depNo},
+											success:function(data){
+												$("#calendar").remove();
+												
+												var area = document.getElementById('calendarArea');
+												
+												var div1 = document.createElement('div');
+												div1.setAttribute("id", "calendar");
+												
+												area.append(div1);
+												
+												startCal();
+												
+												var result = data.cList;
+												
+												$.each(result, function(i){
+										              var event={schetype:result[i].scheType, id:result[i].scheduleNo, title: result[i].scheduleTitle, content:result[i].scheduleContent, 
+										            		  start:result[i].scheStartDate, end:result[i].scheEndDate};
+										               
+										               
+										               $('#calendar').fullCalendar('renderEvent', event, true);
+
+										               /* calendar.fullCalendar('renderEvent', {
+																title : result[i].scheduleTitle,
+																content : result[i].scheduleContent,
+																start : result[i].scheStartDate,
+																end : result[i].scheEndDate
+															}, true // make the event "stick"
+															); */
+														
+										            });
+												
+											},
+											error:function(data){
+												console.log("error");
+											},
+											
+										});
+									});
+									</script>
   
 </body>
 

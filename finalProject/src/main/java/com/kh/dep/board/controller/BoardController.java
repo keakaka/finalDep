@@ -56,16 +56,8 @@ public class BoardController {
 		
 		try {
 			ArrayList<Board>blist = bs.selectBoardList(depName);
-			
-			ArrayList<Board>list = new ArrayList<Board>();
-			
-//			for(int i = blist.size(); i <= 0; i--){
-//				list.add(blist.get(i));
-//				System.out.println(list);
-//			}
-			
+
 			model.addAttribute("blist", blist);
-			
 
 		} catch (Exception e) {
 

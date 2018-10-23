@@ -43,14 +43,6 @@
 		<result property="status" column="STATUS"/>
 	</resultMap>
 	
-	<resultMap type="Alarm" id="AlarmResultSet">
-		<result property="alarmNo" column="ALARM_NO" />
-		<result property="alarmContents" column="ALARM_CONTENTS" />	
-		<result property="empNo" column="EMP_NO" />
-		<result property="status" column="STATUS" />
-		<result property="receiveDate" column="RECEIVE_DATE" />
-	</resultMap>
-	
 	<!-- 부서별 부서원 목록 조회 -->
 	<select id="selectMemberDep" resultMap="MemberDepList" parameterType="MemberDep">
 		SELECT E.EMP_NO, E.EMP_NAME, D.DEP_NAME, J.JOB_NAME, P.POSITION_NAME FROM EMPLOYEE E
@@ -216,24 +208,6 @@
 		AND PROCEED_NO = #{proceedNo}
 	</update>
 	
-	<!-- 알람 Insert -->
-	<insert id="insertSignAlarm" parameterType="Alarm">
-	INSERT INTO "FINAL"."ALARM" (ALARM_NO, ALARM_CONTENTS, EMP_NO , STATUS, RECEIVE_DATE) 
-	VALUES (ALARM_NO.NEXTVAL, #{alarmContents}, #{empNo}, 'Y', SYSDATE)
-	</insert>
-	
-	<!-- 다음 결재자 번호 찾아오기 -->
-	<select id="nextApprovalMember" parameterType="_int" resultType="_int">
-		SELECT EMP_NO FROM (
-		SELECT * FROM APPROVAL_RECORD WHERE DOC_NO = #{docNo} AND APPROVAL_STATUS = 'AP1' ORDER BY 1
-		)
-		WHERE ROWNUM = 1
-	</select>
-	
-	<!-- 문서별 수신참조자들 조회 -->
-	<select id="selectReceiverList" parameterType="Document" resultMap="DocumentList">
-		SELECT EMP_NO FROM RECEIVING_CHECK WHERE DOC_NO = #{docNo}
-	</select>
 </mapper>
 
 

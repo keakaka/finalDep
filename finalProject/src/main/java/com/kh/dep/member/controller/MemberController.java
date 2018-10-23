@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,12 +22,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 import com.kh.dep.attachment.model.service.AttachService;
 import com.kh.dep.attachment.model.service.AttachServiceImpl;
@@ -64,11 +67,11 @@ public class MemberController {
 		try {
 			MemberSelect loginUser = ms.selectLoginMember(m);
 
-			System.out.println(loginUser);
+			//System.out.println(loginUser);
 			model.addAttribute("loginUser", loginUser);
 			
 			int myAlarmCount = ms.selectMyAlarmCount(loginUser.getEmpNo());
-			System.out.println(myAlarmCount);
+			//System.out.println(myAlarmCount);
 			loginUser.setMyAlarmCount(myAlarmCount);
 			redirect.addAttribute("m", loginUser.getEmpNo());
 			
@@ -95,13 +98,25 @@ public class MemberController {
 
 
 	@RequestMapping("moveMemberInsert.me")
-	public String moveMemberInsert(Model model){
+	public String moveMemberInsert(Model model, HttpServletRequest request){
 
 		ArrayList<MemberDepartment> deplist = ms.selectDepList();
 
 		ArrayList<MemberJob> joblist = ms.selectJobList();
 
 		ArrayList<Position> polist = ms.selectpositList();
+		
+		//사원번호 post 방식으로 넘겨받음
+		Map<String, ?> map = RequestContextUtils.getInputFlashMap(request);
+
+		if(map != null){
+			int success = (int) map.get("success");
+				
+				model.addAttribute("empNo", success);
+			
+		}
+		
+	
 
 		model.addAttribute("deplist", deplist);
 		model.addAttribute("joblist", joblist);
@@ -113,7 +128,8 @@ public class MemberController {
 	@RequestMapping("memberInsert.me")
 	public String memberInsert(MemberSelect m, Model model,HttpServletRequest request,
 			@RequestParam(name="photo", required=false)MultipartFile photo,
-			@RequestParam(name="signature", required=false)MultipartFile signature){
+			@RequestParam(name="signature", required=false)MultipartFile signature,
+			RedirectAttributes redirectAttributes){
 
 
 		String root = request.getSession().getServletContext().getRealPath("resources");
@@ -166,18 +182,22 @@ public class MemberController {
 				sig.setEmpNo(empNo);
 				sig.setEmpType("ET2");
 
-				System.out.println(file);
-				System.out.println(sig);
+				//System.out.println(file);
+				//System.out.println(sig);
 
 
 				int result1 = as.insertAttachment(file);
 
-				System.out.println("사진 저장 성공 " + result1);
+				//System.out.println("사진 저장 성공 " + result1);
 
 
 				if(result1 > 0 ){
-					System.out.println("사진 저장 성공 후 서명사진 실행");
+					//System.out.println("사진 저장 성공 후 서명사진 실행");
 					as.insertAttachment(sig);
+					
+					int success = empNo;
+					//redirectAttributes.addAttribute("success", success);
+					redirectAttributes.addFlashAttribute("success", success); // post방식으로 전송
 				}
 
 
@@ -597,5 +617,16 @@ public class MemberController {
 		
 		return "member/sample";
 	}
+	
+	
+	@RequestMapping("checkMember.me")
+	public @ResponseBody int checkMember(MemberSelect m){
+		
+		
+		int result = ms.selectCheckMember(m);
+		
+		return result;
+	}
+	
 
 }
