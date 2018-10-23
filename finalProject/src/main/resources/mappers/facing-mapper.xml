@@ -124,6 +124,13 @@
     AND WR.EMP_NO = #{empNo}
 	</select>
 	
+	<!-- 알람카운트(은비) -->
+	<select id="selectAlarmCount" parameterType="_int" resultType="_int">
+		SELECT COUNT(*)
+		FROM ALARM
+		WHERE EMP_NO=#{receiverEmpNo}
+		AND STATUS='Y' 
+	</select>
 
 </mapper>
 

@@ -259,6 +259,17 @@ public class FacingController {
 								al.setAlramContents(title);
 								al.setEmpNo(receiveNo);
 								int alram = fs.insertAlram(al);
+								
+								
+								/*알람카운트 업데이트 부분(은비)*/
+								int receiverEmpNo = mlist.get(i).getEmpNo();
+								int alarmCount = fs.selectAlarmCount(receiverEmpNo);
+								System.out.println(alarmCount);
+								System.out.println("나의 알람갯수(전) : " + mlist.get(i).getMyAlarmCount());
+							    mlist.get(i).setMyAlarmCount(alarmCount);
+								System.out.println("나의 알람갯수(후) : " + mlist.get(i).getMyAlarmCount());
+								
+								
 								break;
 						
 					}

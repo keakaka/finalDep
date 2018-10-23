@@ -137,6 +137,11 @@ public class FacingServiceImpl implements FacingService {
 		
 		return qrList;
 	}
+	@Override
+	public int selectAlarmCount(int receiverEmpNo) {
+		
+		return fd.selectAlarmCount(sqlSession, receiverEmpNo);
+	}
 
 
 

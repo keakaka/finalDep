@@ -89,8 +89,8 @@
 											<div class="col-md-12 col-sm-12 col-xs-12">
 												<div class="x_panel">
 													<div class="x_title">
-														<h2>
-															급여이력조회 <small>인사담당자</small>
+														<h2 style="font-weight:bold; overflow:visible;">
+															급여이력조회 <small>회계담당자</small>
 														</h2>
 
 														<div class="clearfix"></div>
@@ -100,23 +100,33 @@
 													<div id="search-select">
 														<select id="departmentType">
 															<option id="web-font" value="D.DEP_ID">부서명</option>
-															<option id="web-font" value="'D1'">영업부</option>
-															<option id="web-font" value="'D2'">인사관리부</option>
-															<option id="web-font" value="'D3'">총무부</option>
-															<option id="web-font" value="'D4'">회계부</option>
-															<option id="web-font" value="'D5'">연구개발부</option>
+															<option id="web-font" value="'D1'">비서</option>
+															<option id="web-font" value="'D2'">인사관리</option>
+															<option id="web-font" value="'D3'">보안</option>
+															<option id="web-font" value="'D4'">재무</option>
+															<option id="web-font" value="'D5'">경영기획</option>
+															<option id="web-font" value="'D6'">전략기획</option>
+															<option id="web-font" value="'D7'">IT</option>
+															<option id="web-font" value="'D8'">마케팅</option>
+															<option id="web-font" value="'D9'">품질관리</option>
+															<option id="web-font" value="'D10'">영업</option>
+															<option id="web-font" value="'D11'">시설관리</option>
+															<option id="web-font" value="'D12'">연구개발</option>
+															<option id="web-font" value="'D13'">고객서비스</option>
+															<option id="web-font" value="'D14'">법무</option>
 														</select> 
 														<select id="jobType">
 															<option id="web-font" value="J.JOB_CODE">직급</option>
-															<option id="web-font" value="'J1'">대표</option>
-															<option id="web-font" value="'J2'">대표이사</option>
-															<option id="web-font" value="'J3'">이사</option>
-															<option id="web-font" value="'J4'">팀장</option>
+															<option id="web-font" value="'J1'">회장</option>
+															<option id="web-font" value="'J2'">사장</option>
+															<option id="web-font" value="'J3'">전무</option>
+															<option id="web-font" value="'J4'">상무</option>
 															<option id="web-font" value="'J5'">부장</option>
 															<option id="web-font" value="'J6'">차장</option>
 															<option id="web-font" value="'J7'">과장</option>
 															<option id="web-font" value="'J8'">대리</option>
-															<option id="web-font" value="'J9'">사원</option>
+															<option id="web-font" value="'J9'">주임</option>
+															<option id="web-font" value="'J10'">사원</option>
 														</select>
 														
 														<label>사원이름</label>
@@ -128,6 +138,11 @@
 															<option id="web-font" value="'2017%'">2017</option>
 															<option id="web-font" value="'2016%'">2016</option>
 															<option id="web-font" value="'2015%'">2015</option>
+															<option id="web-font" value="'2014%'">2014</option>
+															<option id="web-font" value="'2013%'">2013</option>
+															<option id="web-font" value="'2012%'">2012</option>
+															<option id="web-font" value="'2011%'">2011</option>
+															<option id="web-font" value="'2010%'">2010</option>
 														</select>
 														<!-- <select id="quarter">
 															<option id="web-font">분기</option>
@@ -135,7 +150,7 @@
 															<option id="web-font">2분기</option>
 														</select> -->
 
-														<button onclick="searchBtn()">검색</button>
+														<button onclick="searchBtn()" class="btn btn-primary" style="background-color:#2a3f54;">검색</button>
 
 													</div>
 
@@ -161,7 +176,7 @@
 																	<th>실지급액</th>
 																</tr>
 															</thead>
-															<tbody>
+															<tbody style="font-size: 18px;">
 															
 															</tbody>
 														</table>
@@ -185,8 +200,8 @@
 													</div>
 
 													<div class="bottom">
-														<button type="button" id="excelImportBtn" class="btn btn-default"
-															onclick="excelCheck();">추가
+														<button type="button" id="excelImportBtn" class="btn btn-primary"
+															onclick="excelCheck();" style="background-color:#2a3f54;">추가
 														</button>
 														<!-- <input type="submit" value="업로드"/> -->
 													</div>
